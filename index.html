@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Aprende Español! — Free Spanish Course</title>
+<style>
+  :root{
+    --bg:#faf6f0; --card:#ffffff; --ink:#2b2420; --muted:#8a7f75;
+    --accent:#c8401f; --accent-soft:#fbe9e2; --gold:#e8a33d; --green:#3d8b5f;
+    --border:#eadfd3; --shadow:0 2px 12px rgba(60,40,20,.08);
+    --radius:14px;
+    --tip-bg:#2b2420; --tip-ink:#ffffff;
+  }
+  body.dark{
+    --bg:#1e1a17; --card:#2a2521; --ink:#f0e9e1; --muted:#a89c8f;
+    --accent:#e86a45; --accent-soft:#42302a; --gold:#e8a33d; --green:#5fb586;
+    --border:#3e3730; --shadow:0 2px 12px rgba(0,0,0,.35);
+    --tip-bg:#f0e9e1; --tip-ink:#2b2420;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  .hidden{display:none !important;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6;}
+  a{color:var(--accent);}
+  .app{display:flex; min-height:100vh;}
+
+  /* Sidebar */
+  .sidebar{width:230px; background:var(--card); border-right:1px solid var(--border);
+    padding:24px 14px; position:sticky; top:0; height:100vh; flex-shrink:0;}
+  .logo{font-size:1.25rem; font-weight:800; padding:0 10px 18px;}
+  .logo span{color:var(--accent);}
+  .nav-btn{display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+    padding:11px 12px; border:none; background:none; border-radius:10px; cursor:pointer;
+    font-size:.95rem; color:var(--ink); margin-bottom:4px; font-family:inherit;}
+  .nav-btn:hover{background:var(--accent-soft);}
+  .nav-btn.active{background:var(--accent); color:#fff; font-weight:600;}
+  .nav-emoji{font-size:1.1rem;}
+
+  /* Main */
+  main{flex:1; padding:32px clamp(16px,4vw,48px); max-width:980px;}
+  .section{display:none;}
+  .section.visible{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1;}}
+  h1{font-size:1.7rem; margin-bottom:6px;}
+  .sub{color:var(--muted); margin-bottom:24px;}
+  h2{font-size:1.15rem; margin:26px 0 12px;}
+
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px 22px; box-shadow:var(--shadow); margin-bottom:16px;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px;}
+
+  /* Dashboard */
+  .stat-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:8px;}
+  .stat{flex:1; min-width:140px; background:var(--card); border:1px solid var(--border);
+    border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow);}
+  .stat .num{font-size:1.6rem; font-weight:800; color:var(--accent);}
+  .stat .lbl{font-size:.82rem; color:var(--muted);}
+
+  /* Lesson list */
+  .lesson-item{display:flex; align-items:center; gap:14px; cursor:pointer;
+    transition:transform .12s;}
+  .lesson-item:hover{transform:translateY(-2px);}
+  .lesson-num{width:38px; height:38px; border-radius:50%; background:var(--accent-soft);
+    color:var(--accent); font-weight:800; display:flex; align-items:center;
+    justify-content:center; flex-shrink:0;}
+  .lesson-item.done .lesson-num{background:var(--green); color:#fff;}
+  .lesson-item h3{font-size:1rem;}
+  .lesson-item p{font-size:.83rem; color:var(--muted);}
+
+  /* Lesson view */
+  .back{background:none; border:none; color:var(--accent); cursor:pointer;
+    font-size:.9rem; margin-bottom:14px; padding:0; font-family:inherit;}
+  table.vocab{width:100%; border-collapse:collapse;}
+  table.vocab td{padding:8px 6px; border-bottom:1px solid var(--border); font-size:.95rem;}
+  table.vocab td:first-child{font-weight:600; width:45%;}
+  .speak-btn{background:var(--accent-soft); border:none; border-radius:8px; cursor:pointer;
+    padding:4px 10px; font-size:.9rem; color:var(--ink);}
+  .speak-btn:hover{opacity:.8;}
+  .grammar p{margin-bottom:10px;}
+  .grammar table{border-collapse:collapse; margin:10px 0;}
+  .grammar th,.grammar td{border:1px solid var(--border); padding:6px 12px; font-size:.9rem;}
+  .grammar th{background:var(--accent-soft);}
+  .example{display:flex; align-items:center; gap:10px; padding:8px 0;
+    border-bottom:1px dashed var(--border);}
+  .example .es{font-weight:600;}
+  .example .en{color:var(--muted); font-size:.9rem;}
+
+  /* Quiz */
+  .quiz-q{margin-bottom:18px;}
+  .quiz-q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; padding:10px 14px; margin-bottom:6px;
+    background:var(--bg); border:1px solid var(--border); border-radius:10px;
+    cursor:pointer; font-size:.93rem; font-family:inherit; color:var(--ink);}
+  .opt:hover{border-color:var(--accent);}
+  .opt.correct{background:#e2f3e9; border-color:var(--green); color:#1d3a2a;}
+  .opt.wrong{background:#fde5e0; border-color:var(--accent); color:#5a2416;}
+  .mode-tabs{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .mode-tab{padding:7px 16px; border-radius:20px; border:1px solid var(--border);
+    background:var(--card); cursor:pointer; font-size:.86rem; font-family:inherit; color:var(--ink);}
+  .mode-tab.active{background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600;}
+  .streak{font-size:1.05rem; font-weight:800; color:var(--gold);}
+  .type-in{padding:10px 14px; border:1px solid var(--border); border-radius:10px;
+    font-size:.95rem; width:min(320px,100%); font-family:inherit;
+    background:var(--card); color:var(--ink);}
+  .type-in::placeholder{color:var(--muted);}
+  .btn{background:var(--accent); color:#fff; border:none; border-radius:10px;
+    padding:10px 20px; font-size:.95rem; font-weight:600; cursor:pointer; font-family:inherit;}
+  .btn:hover{opacity:.9;}
+  .btn.ghost{background:var(--accent-soft); color:var(--accent);}
+  .feedback{font-size:.88rem; margin-top:4px; min-height:1.2em;}
+  .feedback.ok{color:var(--green);} .feedback.no{color:var(--accent);}
+
+  /* Flashcards */
+  .fc-stage{max-width:480px; margin:0 auto; text-align:center;}
+  .fc-card{background:var(--card); border:1px solid var(--border); border-radius:18px;
+    box-shadow:var(--shadow); min-height:200px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; font-size:1.5rem; font-weight:700;
+    cursor:pointer; padding:24px; margin-bottom:16px; user-select:none;}
+  .fc-card .hint{font-size:.8rem; color:var(--muted); font-weight:400; margin-top:12px;}
+  .fc-actions{display:flex; gap:10px; justify-content:center;}
+  .fc-meta{color:var(--muted); font-size:.85rem; margin-bottom:12px;}
+  .badge{display:inline-block; background:var(--accent-soft); color:var(--accent);
+    border-radius:20px; padding:2px 12px; font-size:.78rem; font-weight:700; margin-left:8px;}
+
+  /* Practice */
+  .big-es{font-size:1.5rem; font-weight:800; margin:12px 0;}
+  .mic-btn{width:72px; height:72px; border-radius:50%; border:none; background:var(--accent);
+    color:#fff; font-size:1.8rem; cursor:pointer; box-shadow:var(--shadow);}
+  .mic-btn.listening{background:var(--green); animation:pulse 1s infinite;}
+  @keyframes pulse{50%{transform:scale(1.08);}}
+  .center{text-align:center;}
+
+  /* Resources */
+  .res-card h3{font-size:1rem; margin-bottom:4px;}
+  .res-card p{font-size:.86rem; color:var(--muted); margin-bottom:8px;}
+  .tag{display:inline-block; font-size:.72rem; background:var(--accent-soft);
+    color:var(--accent); border-radius:20px; padding:2px 10px; margin-right:4px; font-weight:700;}
+
+  /* Word tooltips */
+  .w{border-bottom:1.5px dotted var(--gold); cursor:help; position:relative;}
+  .w:hover::after, .w:focus::after{
+    content:attr(data-tip); position:absolute; left:50%; bottom:130%; transform:translateX(-50%);
+    background:var(--tip-bg); color:var(--tip-ink); font-size:.78rem; font-weight:500; line-height:1.3;
+    padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:10; pointer-events:none;
+    box-shadow:0 3px 10px rgba(0,0,0,.25);}
+  .w:hover::before, .w:focus::before{
+    content:""; position:absolute; left:50%; bottom:115%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:var(--tip-bg); z-index:10;}
+
+  /* Profile overlay */
+  .overlay{position:fixed; inset:0; background:var(--bg); z-index:100; display:flex;
+    align-items:center; justify-content:center; padding:20px;}
+  .overlay.hidden{display:none;}
+  .profile-box{max-width:440px; width:100%; text-align:center;}
+  .profile-box h1{margin-bottom:6px;}
+  .profile-list{margin:22px 0;}
+  .profile-item{display:flex; align-items:center; gap:12px; background:var(--card);
+    border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px;
+    margin-bottom:10px; cursor:pointer; box-shadow:var(--shadow); transition:transform .12s;}
+  .profile-item:hover{transform:translateY(-2px); border-color:var(--accent);}
+  .profile-avatar{width:42px; height:42px; border-radius:50%; background:var(--accent-soft);
+    display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;}
+  .profile-item .pname{font-weight:700; flex:1; text-align:left;}
+  .profile-item .pmeta{font-size:.78rem; color:var(--muted);}
+  .profile-del{background:none; border:none; color:var(--muted); cursor:pointer;
+    font-size:1rem; padding:4px 8px;}
+  .profile-del:hover{color:var(--accent);}
+
+  .progress-bar{height:8px; background:var(--border); border-radius:6px; overflow:hidden; margin:10px 0 4px;}
+  .progress-bar div{height:100%; background:var(--green); border-radius:6px; transition:width .3s;}
+
+  @media(max-width:760px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%; height:auto; position:static; display:flex; overflow-x:auto;
+      padding:10px; gap:4px; align-items:center;}
+    .logo{padding:0 10px; font-size:1rem; white-space:nowrap;}
+    .nav-btn{white-space:nowrap; width:auto; margin-bottom:0;}
+    .nav-label{display:none;}
+    main{padding:20px 16px;}
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="overlay" id="boot-loading">
+  <div class="profile-box">
+    <div style="font-size:2.4rem">🇪🇸</div>
+    <p style="color:var(--muted)">Yükleniyor…</p>
+  </div>
+</div>
+<div class="overlay hidden" id="auth-overlay">
+  <div class="profile-box">
+    <div style="font-size:2.4rem">🇪🇸</div>
+    <h1>¡Aprende <span style="color:var(--accent)">Español</span>!</h1>
+    <p style="color:var(--muted)">Hesabınızla kayıt olun veya giriş yapın — ilerlemeniz güvenle saklansın.</p>
+    <div class="mode-tabs" style="justify-content:center; margin-top:14px">
+      <button class="mode-tab active" id="auth-tab-signup" onclick="setAuthMode('signup')">Kayıt Ol</button>
+      <button class="mode-tab" id="auth-tab-login" onclick="setAuthMode('login')">Giriş Yap</button>
+    </div>
+    <input class="type-in" id="auth-name" placeholder="Adınız..." maxlength="20" style="width:100%; margin-top:12px">
+    <input class="type-in" id="auth-email" type="email" placeholder="E-posta..." maxlength="60" style="width:100%; margin-top:8px">
+    <input class="type-in" id="auth-password" type="password" placeholder="Şifre (en az 6 karakter)..." maxlength="72"
+      style="width:100%; margin-top:8px" onkeydown="if(event.key==='Enter')submitAuth()">
+    <div class="feedback" id="auth-fb" style="margin-top:8px; min-height:1.2em"></div>
+    <div style="margin-top:12px">
+      <button class="btn" id="auth-submit-btn" onclick="submitAuth()">Kayıt Ol</button>
+    </div>
+    <p style="margin-top:10px"><a href="javascript:void(0)" onclick="forgotPassword()" style="font-size:.85rem">Şifremi unuttum</a></p>
+  </div>
+</div>
+<div class="app">
+  <nav class="sidebar">
+    <div class="logo">¡Aprende <span>Español</span>!</div>
+    <button class="nav-btn active" data-sec="home"><span class="nav-emoji">🏠</span><span class="nav-label">Home</span></button>
+    <button class="nav-btn" data-sec="lessons"><span class="nav-emoji">📚</span><span class="nav-label">Lessons</span></button>
+    <button class="nav-btn" data-sec="flashcards"><span class="nav-emoji">🃏</span><span class="nav-label">Flashcards</span></button>
+    <button class="nav-btn" data-sec="listening"><span class="nav-emoji">🎧</span><span class="nav-label">Listening</span></button>
+    <button class="nav-btn" data-sec="speaking"><span class="nav-emoji">🎤</span><span class="nav-label">Speaking</span></button>
+    <button class="nav-btn" data-sec="verbs"><span class="nav-emoji">⚙️</span><span class="nav-label">Verb Trainer</span></button>
+    <button class="nav-btn" data-sec="progress"><span class="nav-emoji">📊</span><span class="nav-label">My Progress</span></button>
+    <button class="nav-btn" data-sec="resources"><span class="nav-emoji">🌍</span><span class="nav-label">Free Resources</span></button>
+    <button class="nav-btn" id="theme-btn" onclick="toggleTheme()" style="margin-top:14px"><span class="nav-emoji">🌙</span><span class="nav-label">Dark mode</span></button>
+    <button class="nav-btn" data-sec="profile" id="profile-btn"><span class="nav-emoji">👤</span><span class="nav-label" id="profile-label">Profile</span></button>
+  </nav>
+
+  <main>
+    <section id="home" class="section visible">
+      <h1 id="greeting">¡Bienvenida! 👋</h1>
+      <p class="sub">Your free, self-paced Spanish course — taught in English, so you practice both languages at once.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num" id="st-lessons">0/10</div><div class="lbl">Lessons completed</div></div>
+        <div class="stat"><div class="num" id="st-words">0</div><div class="lbl">Words mastered</div></div>
+        <div class="stat"><div class="num" id="st-streak">0</div><div class="lbl">Cards due today</div></div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0">How to use this site</h2>
+        <p>1️⃣ Work through the <b>Lessons</b> in order — each one has vocabulary (with audio), a grammar explanation, examples, and a quiz.</p>
+        <p>2️⃣ Review words daily with <b>Flashcards</b> — a spaced-repetition system remembers what you find hard.</p>
+        <p>3️⃣ Train your ears in <b>Listening</b> and your pronunciation in <b>Speaking</b> (works best in Chrome/Edge).</p>
+        <p>4️⃣ When you finish, dive into the <b>Free Resources</b> library to keep going — everything there is 100% free.</p>
+        <p style="margin-top:10px; color:var(--muted); font-size:.88rem">💾 Your progress is saved automatically in this browser.</p>
+      </div>
+      <div class="card" id="continue-card"></div>
+    </section>
+
+    <section id="lessons" class="section">
+      <h1>Lessons — Level A1</h1>
+      <p class="sub">A complete beginner course. Do them in order; each builds on the last.</p>
+      <div id="lesson-list"></div>
+    </section>
+
+    <section id="lesson-view" class="section"></section>
+
+    <section id="flashcards" class="section">
+      <h1>Flashcards 🃏</h1>
+      <p class="sub">Spaced repetition: cards you miss come back sooner. Click a card to flip it.</p>
+      <div id="fc-area"></div>
+    </section>
+
+    <section id="listening" class="section">
+      <h1>Listening practice 🎧</h1>
+      <p class="sub">Listen to the Spanish sentence, then pick the correct meaning. Uses your browser's free Spanish voice.</p>
+      <div id="listen-area"></div>
+    </section>
+
+    <section id="speaking" class="section">
+      <h1>Speaking practice 🎤</h1>
+      <p class="sub">Read the phrase aloud — your browser's free speech recognition checks your pronunciation. Best in Chrome.</p>
+      <div id="speak-area"></div>
+    </section>
+
+    <section id="verbs" class="section">
+      <h1>Verb conjugation trainer ⚙️</h1>
+      <p class="sub">Fast drills to make conjugations automatic — the single biggest speed boost for beginners.</p>
+      <div id="verb-area"></div>
+    </section>
+
+    <section id="progress" class="section">
+      <h1>My progress 📊</h1>
+      <p class="sub">Everything you've learned so far — and ways to take it with you.</p>
+      <div id="progress-area"></div>
+    </section>
+
+    <section id="resources" class="section">
+      <h1>Free resources library 🌍</h1>
+      <p class="sub">Hand-picked, genuinely free tools to continue past this course. All in English → Spanish, perfect for double practice.</p>
+      <div class="grid" id="res-grid"></div>
+    </section>
+
+    <section id="profile" class="section">
+      <h1>My Profile 👤</h1>
+      <p class="sub">Your avatar, name, email, voice, streak and badges — all in one place.</p>
+
+      <div class="card">
+        <h2 style="margin-top:0">Avatar &amp; details</h2>
+        <div id="avatar-picker" style="text-align:center; margin-bottom:16px"></div>
+        <label style="font-size:.88rem; font-weight:600">Name</label><br>
+        <input class="type-in" id="profile-name-in" maxlength="20" style="width:min(320px,100%); margin:6px 0 14px"><br>
+        <label style="font-size:.88rem; font-weight:600">Email</label><br>
+        <input class="type-in" id="profile-email-in" type="email" placeholder="you@example.com" maxlength="60" style="width:min(320px,100%); margin:6px 0 14px"><br>
+        <button class="btn" onclick="saveProfileDetails()">💾 Save changes</button>
+        <span class="feedback ok" id="profile-save-fb" style="display:inline-block; margin-left:8px"></span>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">🔥 Streak</h2>
+        <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px">Come back every day to keep your streak alive.</p>
+        <div class="stat-row" id="streak-stats"></div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">🏅 Badges</h2>
+        <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px">Earn these by completing lessons, mastering words, and practicing daily.</p>
+        <div class="grid" id="badge-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">🔊 Voice settings</h2>
+        <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px">Voice quality depends on your device. Pick the one that sounds most natural (⭐ = high quality). In Chrome, "Google español" is usually best; in Edge, the "Natural" voices.</p>
+        <label style="font-size:.88rem; font-weight:600">Spanish voice</label><br>
+        <select id="voice-sel" class="type-in" style="width:min(420px,100%); margin:6px 0 14px" onchange="setVoice(this.value)"></select><br>
+        <label style="font-size:.88rem; font-weight:600">Speed: <span id="rate-val">0.85×</span></label><br>
+        <input type="range" min="0.5" max="1.2" step="0.05" value="0.85" id="rate-slider"
+          style="width:min(420px,100%); margin:6px 0 14px" oninput="setRate(this.value)"><br>
+        <button class="btn ghost" onclick="speak('Hola, estoy aprendiendo español. ¡Es muy divertido!')">▶️ Test the voice</button>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">Account</h2>
+        <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px" id="account-email-display"></p>
+        <button class="btn ghost" onclick="logout()">🚪 Log out</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const LESSONS = [
+{
+  id:1, title:"The Alphabet & Pronunciation", subtitle:"Read Spanish out loud from day one",
+  vocab:[
+    ["hola","hello"],["adiós","goodbye"],["sí","yes"],["no","no"],
+    ["por favor","please"],["gracias","thank you"],["de nada","you're welcome"],
+    ["perdón","sorry / excuse me"]
+  ],
+  grammar:`<p>Great news: Spanish is <b>phonetic</b> — words are pronounced exactly as they are written. Learn a few rules and you can read anything.</p>
+  <p><b>Vowels</b> are always short and pure: <b>a</b> (ah), <b>e</b> (eh), <b>i</b> (ee), <b>o</b> (oh), <b>u</b> (oo). They never change like English vowels do.</p>
+  <p><b>Key consonants:</b></p>
+  <table><tr><th>Letter</th><th>Sound</th><th>Example</th></tr>
+  <tr><td>ñ</td><td>"ny" as in canyon</td><td>español</td></tr>
+  <tr><td>ll</td><td>"y" as in yes</td><td>llamar</td></tr>
+  <tr><td>j</td><td>strong "h"</td><td>jamón</td></tr>
+  <tr><td>h</td><td>always silent</td><td>hola = "ola"</td></tr>
+  <tr><td>rr</td><td>rolled r</td><td>perro</td></tr>
+  <tr><td>c + e/i</td><td>"th" (Spain) or "s" (Latin America)</td><td>gracias</td></tr>
+  <tr><td>qu</td><td>"k"</td><td>qué</td></tr></table>
+  <p><b>Stress rule:</b> words ending in a vowel, n, or s are stressed on the second-to-last syllable. An accent mark (á é í ó ú) overrides this — stress that syllable.</p>`,
+  examples:[
+    ["Hola, ¿qué tal?","Hi, how's it going?"],
+    ["Gracias por todo.","Thanks for everything."],
+    ["Perdón, no entiendo.","Sorry, I don't understand."],
+    ["Adiós, hasta luego.","Goodbye, see you later."]
+  ],
+  quiz:[
+    {q:"The letter 'h' in Spanish is...",o:["always silent","pronounced strongly","only silent at the end"],a:0},
+    {q:"How is 'ñ' pronounced?",o:["like 'n'","like 'ny' in canyon","like 'm'"],a:1},
+    {q:"'J' in 'jamón' sounds like...",o:["English j","a strong h","a y sound"],a:1},
+    {type:"type",q:"Type the Spanish word for 'thank you':",a:"gracias"},
+    {type:"type",q:"Type the Spanish word for 'hello':",a:"hola"}
+  ]
+},
+{
+  id:2, title:"Greetings & Introductions", subtitle:"Meet people and talk about yourself",
+  vocab:[
+    ["buenos días","good morning"],["buenas tardes","good afternoon"],
+    ["buenas noches","good evening / night"],["¿cómo estás?","how are you?"],
+    ["me llamo...","my name is..."],["¿cómo te llamas?","what's your name?"],
+    ["mucho gusto","nice to meet you"],["¿de dónde eres?","where are you from?"],
+    ["soy de Turquía","I'm from Turkey"],["hasta mañana","see you tomorrow"]
+  ],
+  grammar:`<p>Spanish questions are wrapped in <b>two question marks</b>: ¿...? The upside-down one warns you a question is coming. Same with exclamations: ¡Hola!</p>
+  <p>To introduce yourself, the most common pattern is <b>Me llamo</b> (literally "I call myself"):</p>
+  <p style="padding-left:16px"><b>Me llamo Yağmur.</b> — My name is Yağmur.<br>
+  <b>¿Cómo te llamas?</b> — What's your name?</p>
+  <p>You can also simply say <b>Soy...</b> ("I am..."): <i>Soy Yağmur. Soy de Turquía.</i></p>
+  <p>Spanish has two words for "you": <b>tú</b> (informal, friends) and <b>usted</b> (formal, strangers/elders). As a beginner, tú is fine almost everywhere.</p>`,
+  examples:[
+    ["Buenos días, ¿cómo estás?","Good morning, how are you?"],
+    ["Me llamo Yağmur, ¿y tú?","My name is Yağmur, and you?"],
+    ["Mucho gusto, Carlos.","Nice to meet you, Carlos."],
+    ["Soy de Turquía. ¿De dónde eres?","I'm from Turkey. Where are you from?"],
+    ["Muy bien, gracias.","Very well, thanks."]
+  ],
+  quiz:[
+    {q:"How do you say 'good morning'?",o:["buenas noches","buenos días","buenas tardes"],a:1},
+    {q:"'¿Cómo te llamas?' means...",o:["How are you?","Where are you from?","What's your name?"],a:2},
+    {q:"The informal word for 'you' is...",o:["usted","tú","yo"],a:1},
+    {type:"type",q:"Complete: '___ gusto' (nice to meet you):",a:"mucho"},
+    {type:"type",q:"Type 'I am from Turkey' in Spanish:",a:"soy de turquía",alt:["soy de turquia"]}
+  ]
+},
+{
+  id:3, title:"Subject Pronouns & SER (to be)", subtitle:"Your first — and most important — verb",
+  vocab:[
+    ["yo","I"],["tú","you (informal)"],["él / ella","he / she"],
+    ["usted","you (formal)"],["nosotros","we"],["ellos / ellas","they"],
+    ["profesor / profesora","teacher (m/f)"],["estudiante","student"],
+    ["médico / médica","doctor (m/f)"],["turco / turca","Turkish (m/f)"]
+  ],
+  grammar:`<p><b>Ser</b> means "to be" and is used for permanent things: identity, origin, profession, personality, nationality.</p>
+  <table><tr><th>Pronoun</th><th>Ser</th><th>Example</th></tr>
+  <tr><td>yo</td><td><b>soy</b></td><td>Soy estudiante.</td></tr>
+  <tr><td>tú</td><td><b>eres</b></td><td>Eres turca.</td></tr>
+  <tr><td>él / ella / usted</td><td><b>es</b></td><td>Ella es médica.</td></tr>
+  <tr><td>nosotros</td><td><b>somos</b></td><td>Somos amigos.</td></tr>
+  <tr><td>vosotros (Spain)</td><td><b>sois</b></td><td>Sois profesores.</td></tr>
+  <tr><td>ellos / ellas / ustedes</td><td><b>son</b></td><td>Son de México.</td></tr></table>
+  <p>💡 Because each form is unique, Spanish usually <b>drops the pronoun</b>: instead of "Yo soy turca" people just say <b>"Soy turca."</b> The verb ending tells you who.</p>`,
+  examples:[
+    ["Soy estudiante de español.","I am a student of Spanish."],
+    ["Ella es profesora.","She is a teacher."],
+    ["Somos de Estambul.","We are from Istanbul."],
+    ["¿Eres médico?","Are you a doctor?"],
+    ["Ellos son mis amigos.","They are my friends."]
+  ],
+  quiz:[
+    {q:"'We are' in Spanish is...",o:["somos","son","sois"],a:0},
+    {q:"Ser is used for...",o:["temporary states like mood","permanent traits like nationality","only questions"],a:1},
+    {q:"'Ella ___ profesora.'",o:["es","eres","soy"],a:0},
+    {type:"type",q:"Conjugate: 'yo ___' (ser):",a:"soy"},
+    {type:"type",q:"Conjugate: 'tú ___' (ser):",a:"eres"}
+  ]
+},
+{
+  id:4, title:"Nouns, Gender & Articles", subtitle:"Why a table is feminine",
+  vocab:[
+    ["el libro","the book"],["la mesa","the table"],["el agua","the water"],
+    ["la casa","the house"],["el coche","the car"],["la ciudad","the city"],
+    ["un amigo","a friend (m)"],["una amiga","a friend (f)"],
+    ["los niños","the children"],["las flores","the flowers"]
+  ],
+  grammar:`<p>Every Spanish noun is either <b>masculine</b> or <b>feminine</b>. The article ("the"/"a") must match:</p>
+  <table><tr><th></th><th>Masculine</th><th>Feminine</th></tr>
+  <tr><td>the (singular)</td><td><b>el</b> libro</td><td><b>la</b> mesa</td></tr>
+  <tr><td>the (plural)</td><td><b>los</b> libros</td><td><b>las</b> mesas</td></tr>
+  <tr><td>a / an</td><td><b>un</b> libro</td><td><b>una</b> mesa</td></tr></table>
+  <p><b>Rules of thumb:</b> nouns ending in <b>-o</b> are usually masculine (el libro), nouns ending in <b>-a</b> are usually feminine (la casa). Also feminine: <b>-ción, -sión, -dad</b> (la ciudad, la canción).</p>
+  <p><b>Plurals</b> are easy: add <b>-s</b> after a vowel (libro → libros), <b>-es</b> after a consonant (ciudad → ciudades).</p>
+  <p>⚠️ Common exceptions: <i>el día</i> (day, masc.), <i>la mano</i> (hand, fem.), <i>el problema</i> (masc.).</p>`,
+  examples:[
+    ["El libro está en la mesa.","The book is on the table."],
+    ["Tengo una amiga en Madrid.","I have a friend in Madrid."],
+    ["Las flores son bonitas.","The flowers are pretty."],
+    ["Los niños están en casa.","The children are at home."]
+  ],
+  quiz:[
+    {q:"Which article goes with 'ciudad'?",o:["el","la","los"],a:1},
+    {q:"The plural of 'ciudad' is...",o:["ciudads","ciudades","ciudades es"],a:1},
+    {q:"'A book' in Spanish:",o:["una libro","un libro","el libro"],a:1},
+    {type:"type",q:"Write 'the table' in Spanish:",a:"la mesa"},
+    {type:"type",q:"Make it plural: 'el libro' → 'los ___':",a:"libros"}
+  ]
+},
+{
+  id:5, title:"Numbers, Days & Months", subtitle:"Count, schedule, and tell the date",
+  vocab:[
+    ["uno, dos, tres","one, two, three"],["cuatro, cinco, seis","four, five, six"],
+    ["siete, ocho, nueve, diez","seven, eight, nine, ten"],
+    ["veinte","twenty"],["cien","one hundred"],
+    ["lunes","Monday"],["martes","Tuesday"],["miércoles","Wednesday"],
+    ["jueves / viernes","Thursday / Friday"],["sábado / domingo","Saturday / Sunday"]
+  ],
+  grammar:`<p><b>11–15</b> are special: once, doce, trece, catorce, quince. From 16: <b>dieciséis, diecisiete...</b> then <b>veintiuno, veintidós...</b> After 30, use <b>y</b>: treinta y uno (31), cuarenta y dos (42).</p>
+  <p><b>Tens:</b> diez 10, veinte 20, treinta 30, cuarenta 40, cincuenta 50, sesenta 60, setenta 70, ochenta 80, noventa 90, cien 100.</p>
+  <p><b>Days and months are NOT capitalized</b> in Spanish: lunes, enero. "On Monday" is simply <b>el lunes</b>; "on Mondays" is <b>los lunes</b>.</p>
+  <p><b>The date:</b> Hoy es el 11 de julio. (Today is July 11th.) Pattern: <i>el + number + de + month</i>.</p>
+  <p>Months: enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre.</p>`,
+  examples:[
+    ["Tengo veintitrés años.","I am 23 years old. (lit: I have 23 years)"],
+    ["Hoy es sábado.","Today is Saturday."],
+    ["Mi cumpleaños es el cinco de mayo.","My birthday is May 5th."],
+    ["La clase es los lunes.","The class is on Mondays."]
+  ],
+  quiz:[
+    {q:"31 in Spanish is...",o:["treinta uno","treinta y uno","tres y uno"],a:1},
+    {q:"Days of the week in Spanish are...",o:["capitalized","not capitalized","always plural"],a:1},
+    {q:"'On Mondays' is...",o:["en lunes","los lunes","el lunes es"],a:1},
+    {type:"type",q:"Type the Spanish for 'Friday':",a:"viernes"},
+    {type:"type",q:"Type the number 15 in Spanish:",a:"quince"}
+  ]
+},
+{
+  id:6, title:"ESTAR & Ser vs Estar", subtitle:"Two verbs 'to be' — the famous pair",
+  vocab:[
+    ["estoy bien","I am well"],["estar cansado/a","to be tired"],
+    ["estar feliz","to be happy"],["estar triste","to be sad"],
+    ["estar enfermo/a","to be sick"],["aquí / allí","here / there"],
+    ["cerca / lejos","near / far"],["ocupado/a","busy"]
+  ],
+  grammar:`<p><b>Estar</b> is the second verb "to be" — used for <b>temporary states</b> and <b>location</b>.</p>
+  <table><tr><th>Pronoun</th><th>Estar</th></tr>
+  <tr><td>yo</td><td><b>estoy</b></td></tr><tr><td>tú</td><td><b>estás</b></td></tr>
+  <tr><td>él/ella/usted</td><td><b>está</b></td></tr><tr><td>nosotros</td><td><b>estamos</b></td></tr>
+  <tr><td>vosotros</td><td><b>estáis</b></td></tr><tr><td>ellos/ustedes</td><td><b>están</b></td></tr></table>
+  <p><b>The golden rule:</b></p>
+  <p>🏛️ <b>SER</b> = what something <i>is</i> (identity, origin, profession, character) — permanent.<br>
+  📍 <b>ESTAR</b> = how/where something <i>is</i> (mood, condition, location) — temporary.</p>
+  <p>Compare: <i>Soy feliz</i> (I'm a happy person) vs <i>Estoy feliz</i> (I'm feeling happy right now). <i>Madrid está en España</i> — location always takes estar, even for cities!</p>`,
+  examples:[
+    ["¿Cómo estás? — Estoy bien, gracias.","How are you? — I'm fine, thanks."],
+    ["Estoy muy cansada hoy.","I'm very tired today."],
+    ["El banco está cerca.","The bank is nearby."],
+    ["Estamos en la clase.","We are in the class."],
+    ["Ella es simpática pero hoy está triste.","She is nice but today she is sad."]
+  ],
+  quiz:[
+    {q:"Location (Where is the bank?) uses...",o:["ser","estar","both"],a:1},
+    {q:"'Yo ___ cansada.'",o:["soy","estoy","es"],a:1},
+    {q:"'Ella es médica' uses ser because profession is...",o:["temporary","a location","an identity"],a:2},
+    {type:"type",q:"Conjugate: 'nosotros ___' (estar):",a:"estamos"},
+    {type:"type",q:"Conjugate: 'tú ___' (estar):",a:"estás",alt:["estas"]}
+  ]
+},
+{
+  id:7, title:"Present Tense: Regular Verbs", subtitle:"Unlock thousands of verbs with 3 patterns",
+  vocab:[
+    ["hablar","to speak"],["estudiar","to study"],["trabajar","to work"],
+    ["comer","to eat"],["beber","to drink"],["aprender","to learn"],
+    ["vivir","to live"],["escribir","to write"],["comprar","to buy"],["escuchar","to listen"]
+  ],
+  grammar:`<p>Spanish verbs end in <b>-ar</b>, <b>-er</b>, or <b>-ir</b>. Remove the ending, add the right suffix — that's it!</p>
+  <table><tr><th></th><th>hablar</th><th>comer</th><th>vivir</th></tr>
+  <tr><td>yo</td><td>habl<b>o</b></td><td>com<b>o</b></td><td>viv<b>o</b></td></tr>
+  <tr><td>tú</td><td>habl<b>as</b></td><td>com<b>es</b></td><td>viv<b>es</b></td></tr>
+  <tr><td>él/ella</td><td>habl<b>a</b></td><td>com<b>e</b></td><td>viv<b>e</b></td></tr>
+  <tr><td>nosotros</td><td>habl<b>amos</b></td><td>com<b>emos</b></td><td>viv<b>imos</b></td></tr>
+  <tr><td>vosotros</td><td>habl<b>áis</b></td><td>com<b>éis</b></td><td>viv<b>ís</b></td></tr>
+  <tr><td>ellos</td><td>habl<b>an</b></td><td>com<b>en</b></td><td>viv<b>en</b></td></tr></table>
+  <p>The present tense covers both English forms: <i>hablo</i> = "I speak" AND "I am speaking".</p>
+  <p><b>Negation</b> is beautifully simple: put <b>no</b> before the verb. <i>No hablo francés.</i></p>`,
+  examples:[
+    ["Estudio español todos los días.","I study Spanish every day."],
+    ["¿Hablas inglés?","Do you speak English?"],
+    ["Vivimos en Estambul.","We live in Istanbul."],
+    ["Ella no come carne.","She doesn't eat meat."],
+    ["Escucho música española.","I listen to Spanish music."]
+  ],
+  quiz:[
+    {q:"'They eat' is...",o:["comen","comes","comemos"],a:0},
+    {q:"How do you negate a verb?",o:["add 'not' after","put 'no' before it","add -n't"],a:1},
+    {q:"'We live' is...",o:["vivemos","vivimos","viven"],a:1},
+    {type:"type",q:"Conjugate: 'yo ___' (hablar):",a:"hablo"},
+    {type:"type",q:"Conjugate: 'tú ___' (comer):",a:"comes"}
+  ]
+},
+{
+  id:8, title:"Key Irregular Verbs: TENER, IR, QUERER", subtitle:"The three verbs you'll use constantly",
+  vocab:[
+    ["tener","to have"],["ir","to go"],["querer","to want / to love"],
+    ["tener hambre","to be hungry"],["tener sed","to be thirsty"],
+    ["tener frío / calor","to be cold / hot"],["ir a casa","to go home"],
+    ["querer aprender","to want to learn"],["tener que + verb","to have to..."]
+  ],
+  grammar:`<p>These three irregulars appear in almost every conversation:</p>
+  <table><tr><th></th><th>tener (have)</th><th>ir (go)</th><th>querer (want)</th></tr>
+  <tr><td>yo</td><td>tengo</td><td>voy</td><td>quiero</td></tr>
+  <tr><td>tú</td><td>tienes</td><td>vas</td><td>quieres</td></tr>
+  <tr><td>él/ella</td><td>tiene</td><td>va</td><td>quiere</td></tr>
+  <tr><td>nosotros</td><td>tenemos</td><td>vamos</td><td>queremos</td></tr>
+  <tr><td>ellos</td><td>tienen</td><td>van</td><td>quieren</td></tr></table>
+  <p><b>Tener idioms:</b> Spanish "has" feelings that English "is": <i>tengo hambre</i> (I'm hungry), <i>tengo 25 años</i> (I'm 25), <i>tengo frío</i> (I'm cold).</p>
+  <p><b>The easy future:</b> <b>ir a + infinitive</b> = "going to...". <i>Voy a estudiar</i> = I'm going to study. You can talk about the future on day one!</p>
+  <p><b>Tener que + infinitive</b> = "have to". <i>Tengo que trabajar.</i> = I have to work.</p>`,
+  examples:[
+    ["Quiero aprender español.","I want to learn Spanish."],
+    ["Tengo dos hermanos.","I have two siblings."],
+    ["Vamos a la playa mañana.","We're going to the beach tomorrow."],
+    ["Voy a estudiar esta noche.","I'm going to study tonight."],
+    ["Tengo que ir a casa.","I have to go home."]
+  ],
+  quiz:[
+    {q:"'I'm hungry' in Spanish is...",o:["soy hambre","tengo hambre","estoy hambre"],a:1},
+    {q:"'Voy a comer' means...",o:["I eat","I'm going to eat","I want to eat"],a:1},
+    {q:"'They want' is...",o:["quieren","quieres","queremos"],a:0},
+    {type:"type",q:"Conjugate: 'yo ___' (tener):",a:"tengo"},
+    {type:"type",q:"Conjugate: 'nosotros ___' (ir):",a:"vamos"}
+  ]
+},
+{
+  id:9, title:"Adjectives, Questions & Negation", subtitle:"Describe things and ask about them",
+  vocab:[
+    ["grande / pequeño","big / small"],["bueno / malo","good / bad"],
+    ["bonito / feo","pretty / ugly"],["nuevo / viejo","new / old"],
+    ["¿qué?","what?"],["¿dónde?","where?"],["¿cuándo?","when?"],
+    ["¿por qué?","why?"],["¿quién?","who?"],["¿cuánto?","how much?"]
+  ],
+  grammar:`<p><b>Adjectives come AFTER the noun</b> and agree in gender and number:</p>
+  <p style="padding-left:16px">el coche <b>rojo</b> → los coches <b>rojos</b><br>la casa <b>roja</b> → las casas <b>rojas</b></p>
+  <p>Adjectives ending in <b>-e</b> or a consonant don't change for gender: <i>el libro grande, la casa grande</i>.</p>
+  <p><b>Question words</b> always carry an accent: qué, dónde, cuándo, quién, cómo, por qué, cuánto.</p>
+  <p style="padding-left:16px">¿<b>Dónde</b> vives? — Where do you live?<br>¿<b>Por qué</b> estudias español? — Why do you study Spanish?</p>
+  <p>💡 Yes/no questions need no helper word — just raise your voice: <i>¿Hablas inglés?</i> And remember, negation = <b>no</b> before the verb: <i>No, no hablo francés.</i></p>`,
+  examples:[
+    ["La ciudad es muy grande.","The city is very big."],
+    ["¿Dónde está el museo?","Where is the museum?"],
+    ["¿Cuánto cuesta?","How much does it cost?"],
+    ["¿Por qué aprendes español? — Porque me gusta.","Why do you learn Spanish? — Because I like it."],
+    ["Las casas nuevas son bonitas.","The new houses are pretty."]
+  ],
+  quiz:[
+    {q:"Adjectives usually go...",o:["before the noun","after the noun","anywhere"],a:1},
+    {q:"'The red houses' is...",o:["las casas rojas","las rojas casas","los casas rojos"],a:0},
+    {q:"'Where?' in Spanish is...",o:["¿cuándo?","¿dónde?","¿quién?"],a:1},
+    {type:"type",q:"Type 'why' in Spanish (two words):",a:"por qué",alt:["por que","¿por qué?"]},
+    {type:"type",q:"Type 'how much' in Spanish:",a:"cuánto",alt:["cuanto","¿cuánto?"]}
+  ]
+},
+{
+  id:10, title:"GUSTAR & Everyday Survival Phrases", subtitle:"Say what you like — and survive any trip",
+  vocab:[
+    ["me gusta","I like (it)"],["me gustan","I like (them)"],
+    ["te gusta","you like"],["no me gusta","I don't like"],
+    ["la comida","the food"],["la música","the music"],
+    ["¿cuánto cuesta?","how much is it?"],["la cuenta, por favor","the bill, please"],
+    ["no entiendo","I don't understand"],["¿puedes repetir?","can you repeat?"]
+  ],
+  grammar:`<p><b>Gustar</b> works backwards: it literally means "to be pleasing". You don't say "I like coffee" — you say "coffee pleases me":</p>
+  <p style="padding-left:16px"><b>Me gusta</b> el café. — I like coffee. (singular thing)<br>
+  <b>Me gustan</b> los libros. — I like books. (plural → gustan)<br>
+  <b>Me gusta</b> bailar. — I like to dance. (verb → singular)</p>
+  <p>Change who likes it by changing the little word: <b>me</b> (I), <b>te</b> (you), <b>le</b> (he/she), <b>nos</b> (we), <b>les</b> (they). <i>¿Te gusta la música?</i></p>
+  <p><b>Survival kit</b> — memorize these as whole chunks: <i>No entiendo</i> (I don't understand), <i>¿Puedes hablar más despacio?</i> (Can you speak more slowly?), <i>¿Cómo se dice ... en español?</i> (How do you say ... in Spanish?).</p>
+  <p>🎉 With these 10 lessons you have real A1 foundations. Now feed your Spanish daily with the Free Resources!</p>`,
+  examples:[
+    ["Me gusta mucho la música española.","I really like Spanish music."],
+    ["¿Te gustan los gatos?","Do you like cats?"],
+    ["Me gusta aprender idiomas.","I like learning languages."],
+    ["No entiendo. ¿Puedes repetir, por favor?","I don't understand. Can you repeat, please?"],
+    ["¿Cómo se dice 'kitap' en español? — Libro.","How do you say 'kitap' in Spanish? — Book."]
+  ],
+  quiz:[
+    {q:"'I like books' is...",o:["me gusta los libros","me gustan los libros","yo gusto libros"],a:1},
+    {q:"'Do you like...?' starts with...",o:["¿Te gusta...?","¿Me gusta...?","¿Se gusta...?"],a:0},
+    {q:"'Me gusta bailar' — why singular gusta?",o:["bailar is feminine","a verb counts as singular","it's an error"],a:1},
+    {type:"type",q:"Type 'I don't understand' in Spanish:",a:"no entiendo"},
+    {type:"type",q:"Complete: '___ gusta el café' (I like coffee):",a:"me"}
+  ]
+},
+{
+  id:11, title:"Pretérito Indefinido (Simple Past)", subtitle:"Talk about completed actions in the past",
+  vocab:[
+    ["ayer","yesterday"],["anoche","last night"],["la semana pasada","last week"],
+    ["el año pasado","last year"],["hace dos días","two days ago"],["ya","already"],
+    ["de repente","suddenly"],["una vez","once / one time"],
+    ["nací","I was born"],["fui a...","I went to..."]
+  ],
+  grammar:`<p>The <b>pretérito indefinido</b> (simple past) describes actions that started and finished at a specific point in the past — "I spoke," "she arrived," "we ate." It's the tense you use to tell stories and talk about yesterday, last week, or years ago.</p>
+  <p><b>Regular -ar verbs</b> (like hablar):</p>
+  <table><tr><th></th><th>hablar</th></tr>
+  <tr><td>yo</td><td>habl<b>é</b></td></tr>
+  <tr><td>tú</td><td>habl<b>aste</b></td></tr>
+  <tr><td>él/ella</td><td>habl<b>ó</b></td></tr>
+  <tr><td>nosotros</td><td>habl<b>amos</b></td></tr>
+  <tr><td>vosotros</td><td>habl<b>asteis</b></td></tr>
+  <tr><td>ellos</td><td>habl<b>aron</b></td></tr></table>
+  <p><b>Regular -er and -ir verbs</b> share the same endings (like comer and vivir):</p>
+  <table><tr><th></th><th>comer</th><th>vivir</th></tr>
+  <tr><td>yo</td><td>com<b>í</b></td><td>viv<b>í</b></td></tr>
+  <tr><td>tú</td><td>com<b>iste</b></td><td>viv<b>iste</b></td></tr>
+  <tr><td>él/ella</td><td>com<b>ió</b></td><td>viv<b>ió</b></td></tr>
+  <tr><td>nosotros</td><td>com<b>imos</b></td><td>viv<b>imos</b></td></tr>
+  <tr><td>vosotros</td><td>com<b>isteis</b></td><td>viv<b>isteis</b></td></tr>
+  <tr><td>ellos</td><td>com<b>ieron</b></td><td>viv<b>ieron</b></td></tr></table>
+  <p>⚠️ <b>Two of the most common verbs are irregular — and share the exact same forms:</b> ser (to be) and ir (to go):</p>
+  <p style="padding-left:16px"><b>fui, fuiste, fue, fuimos, fuisteis, fueron</b></p>
+  <p>Context tells them apart: <i>Fui a Madrid</i> (I went to Madrid) vs <i>Fui estudiante</i> (I was a student).</p>
+  <p>Other common irregulars: <b>tener → tuve</b>, <b>hacer → hice</b>, <b>estar → estuve</b>, <b>poder → pude</b>.</p>
+  <p>💡 Time markers like <b>ayer, anoche, la semana pasada, hace dos días</b> almost always signal the preterite is coming.</p>`,
+  examples:[
+    ["Ayer hablé con mi profesora.","Yesterday I spoke with my teacher."],
+    ["Fui a la playa el verano pasado.","I went to the beach last summer."],
+    ["Comimos en un restaurante nuevo.","We ate at a new restaurant."],
+    ["¿Qué hiciste anoche?","What did you do last night?"],
+    ["Nací en Estambul.","I was born in Istanbul."]
+  ],
+  quiz:[
+    {q:"'I spoke' in Spanish is...",o:["hablo","hablé","hablaba"],a:1},
+    {q:"'Ser' and 'ir' in the preterite...",o:["are completely different","share the exact same forms","don't exist in the past"],a:1},
+    {q:"'Comimos' means...",o:["we eat","we ate","we will eat"],a:1},
+    {type:"type",q:"Conjugate: 'yo ___' (hablar, preterite):",a:"hablé",alt:["hable"]},
+    {type:"type",q:"Conjugate: 'ella ___' (ir, preterite):",a:"fue"}
+  ]
+}
+];
+const RESOURCES = [
+  {n:"Language Transfer — Complete Spanish", u:"https://www.languagetransfer.org/free-courses-1", t:["Audio course","All levels"],
+   d:"A brilliant, completely free 90-lesson audio course that teaches you to *think* in Spanish. Many learners call it better than paid apps. Start here."},
+  {n:"Dreaming Spanish", u:"https://www.youtube.com/@DreamingSpanish", t:["Listening","Video"],
+   d:"Hundreds of free videos in slow, clear Spanish sorted by level (Superbeginner → Advanced). The best free listening input on the internet."},
+  {n:"SpanishDict", u:"https://www.spanishdict.com", t:["Dictionary","Grammar"],
+   d:"The best free Spanish↔English dictionary, with conjugation tables, pronunciation audio, grammar guides, and free structured lessons."},
+  {n:"StudySpanish.com — Grammar", u:"https://studyspanish.com/grammar", t:["Grammar","Reference"],
+   d:"Free, in-depth grammar unit for every topic with quizzes. Perfect as a reference alongside this course."},
+  {n:"Duolingo", u:"https://www.duolingo.com", t:["App","Gamified"],
+   d:"The free tier is enough for daily practice. Set your course to English→Spanish to train both languages, like this site does."},
+  {n:"Anki", u:"https://apps.ankiweb.net", t:["Flashcards","Desktop"],
+   d:"Free, powerful spaced-repetition software. Download a shared 'Spanish top 1000 words' deck when you outgrow the flashcards here."},
+  {n:"Coffee Break Spanish", u:"https://coffeebreaklanguages.com/coffeebreakspanish/", t:["Podcast","Beginner"],
+   d:"Friendly 15-20 minute podcast lessons taught in English — ideal for your English+Spanish combo goal. Free on any podcast app."},
+  {n:"Notes in Spanish", u:"https://www.notesinspanish.com", t:["Podcast","Real speech"],
+   d:"Free podcast by a Spanish-British couple in Madrid — real conversations from beginner to advanced."},
+  {n:"Extra en Español", u:"https://www.youtube.com/results?search_query=extra+en+espanol+episodio+1", t:["TV series","Fun"],
+   d:"A free sitcom made for Spanish learners (13 episodes). Simple language, very fun — like 'Friends' for A1-A2 learners."},
+  {n:"Forvo", u:"https://forvo.com/languages/es/", t:["Pronunciation"],
+   d:"Hear any Spanish word pronounced by real native speakers, for free."},
+  {n:"Conjuguemos", u:"https://conjuguemos.com/verbs/homework/1", t:["Verb drills","Games"],
+   d:"Free timed verb-conjugation games. The fastest way to make conjugations automatic."},
+  {n:"ConversationExchange / Tandem", u:"https://www.conversationexchange.com", t:["Speaking","Partners"],
+   d:"Find a native Spanish speaker who wants to learn English or Turkish — you teach each other for free, by text or video call."},
+  {n:"RTVE — Spanish public TV", u:"https://www.rtve.es", t:["Immersion","News"],
+   d:"Free Spanish TV, news and series. Great once you reach A2-B1 — try the news with subtitles."},
+  {n:"Snappy / Free graded readers", u:"https://snappyspanish.com", t:["Reading","Stories"],
+   d:"Free short stories written for learners, with audio — reading is the most underrated way to build vocabulary."}
+];
+/* ================= WORD DICTIONARY (for hover tooltips) ================= */
+const DICT = {
+  "hola":"hello","qué":"what / how","tal":"such — ¿qué tal? = how's it going?","gracias":"thank you",
+  "por":"for / by","todo":"everything","perdón":"sorry","no":"no / not",
+  "entiendo":"I understand (entender)","adiós":"goodbye","hasta":"until","luego":"later",
+  "buenos":"good (m. pl.)","buenas":"good (f. pl.)","días":"days","noches":"nights","tardes":"afternoons",
+  "cómo":"how","estás":"you are (estar)","me":"me / myself","llamo":"I call (llamar) — me llamo = my name is",
+  "y":"and","tú":"you (informal)","mucho":"much / a lot","gusto":"pleasure","soy":"I am (ser)",
+  "de":"of / from","turquía":"Turkey","dónde":"where","eres":"you are (ser)","muy":"very","bien":"well",
+  "estudiante":"student","español":"Spanish","ella":"she","él":"he","es":"is (ser)","profesora":"teacher (f.)",
+  "somos":"we are (ser)","estambul":"Istanbul","médico":"doctor","ellos":"they","son":"they are (ser)",
+  "mis":"my (plural)","amigos":"friends","el":"the (m.)","libro":"book","está":"is (estar)",
+  "en":"in / on / at","la":"the (f.)","mesa":"table","tengo":"I have (tener)","una":"a / an (f.)","un":"a / an (m.)",
+  "amiga":"friend (f.)","las":"the (f. pl.)","flores":"flowers","bonitas":"pretty (f. pl.)",
+  "los":"the (m. pl.)","niños":"children","están":"they are (estar)","casa":"house / home",
+  "veintitrés":"twenty-three","años":"years","hoy":"today","sábado":"Saturday","mi":"my",
+  "cumpleaños":"birthday","cinco":"five","mayo":"May","clase":"class","lunes":"Monday(s)",
+  "estoy":"I am (estar)","cansada":"tired (f.)","banco":"bank","cerca":"near","estamos":"we are (estar)",
+  "simpática":"nice / friendly (f.)","pero":"but","triste":"sad","estudio":"I study (estudiar)",
+  "todos":"all / every","hablas":"you speak (hablar)","inglés":"English","vivimos":"we live (vivir)",
+  "come":"eats (comer)","carne":"meat","escucho":"I listen (escuchar)","música":"music",
+  "española":"Spanish (f.)","quiero":"I want (querer)","aprender":"to learn","dos":"two",
+  "hermanos":"siblings / brothers","vamos":"we go (ir)","a":"to","playa":"beach","mañana":"tomorrow / morning",
+  "voy":"I go (ir) — voy a = I'm going to","estudiar":"to study","esta":"this (f.)","noche":"night",
+  "que":"that / than — tener que = to have to","ir":"to go","ciudad":"city","grande":"big",
+  "museo":"museum","cuánto":"how much","cuesta":"costs (costar)","aprendes":"you learn (aprender)",
+  "porque":"because","gusta":"pleases — me gusta = I like","casas":"houses","nuevas":"new (f. pl.)",
+  "gustan":"please (pl.) — me gustan = I like (them)","te":"you / yourself","gatos":"cats",
+  "idiomas":"languages","puedes":"you can (poder)","repetir":"to repeat","favor":"favor — por favor = please",
+  "se":"oneself — ¿cómo se dice? = how do you say?","dice":"says (decir)",
+  "ayer":"yesterday","hablé":"I spoke (hablar, preterite)","con":"with",
+  "fui":"I went / I was (ir / ser, preterite)","verano":"summer","pasado":"past / last — el año pasado = last year",
+  "comimos":"we ate (comer, preterite)","restaurante":"restaurant","nuevo":"new (m.)",
+  "hiciste":"you did (hacer, preterite)","anoche":"last night","nací":"I was born (nacer, preterite)"
+};
+function tipify(sentence){
+  return sentence.split(" ").map(tok => {
+    const parts = tok.match(/^([¿¡"'(]*)(.*?)([?!.,:;—"')]*)$/);
+    if (!parts) return tok;
+    const tip = DICT[parts[2].toLowerCase()];
+    if (!tip) return tok;
+    return parts[1] + `<span class="w" tabindex="0" data-tip="${esc(tip)}">${parts[2]}</span>` + parts[3];
+  }).join(" ");
+}
+
+/* ================= SUPABASE ================= */
+const SUPABASE_URL = "https://ohplvrttjserreicemyb.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ocGx2cnR0anNlcnJlaWNlbXliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3OTAzMDcsImV4cCI6MjA5OTM2NjMwN30.SNmdt2JywVnx_7iO5qrZ945Mkd_3H7Zl6ATJkIhx3qk";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ================= STORAGE & PROFILE (Supabase-backed) ================= */
+const AVATARS = ["🦊","🐱","🦉","🐧","🐸","🦋","🐢","🐰","🦁","🐨","🐼","🦄"];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+let myProfile = null;    // row from `profiles` table
+let progressCache = {};  // row from `progress` table (minus user_id)
+function currentProfile(){ return myProfile; }
+function avatarHTML(p, size){
+  const s = size || 42;
+  return p.photo
+    ? `<img src="${p.photo}" style="width:${s}px; height:${s}px; border-radius:50%; object-fit:cover">`
+    : p.avatar;
+}
+const store = {
+  get(k, def){ const v = progressCache[k]; return (v === null || v === undefined) ? def : v; },
+  set(k, v){
+    progressCache[k] = v;
+    if (!myProfile) return;
+    sb.from("progress").upsert({ user_id: myProfile.id, [k]: v, updated_at: new Date().toISOString() })
+      .then(({ error }) => { if (error) console.error("progress save failed:", error.message); });
+  }
+};
+
+let authMode = "signup";
+function setAuthMode(m){
+  authMode = m;
+  document.getElementById("auth-tab-signup").classList.toggle("active", m === "signup");
+  document.getElementById("auth-tab-login").classList.toggle("active", m === "login");
+  document.getElementById("auth-name").classList.toggle("hidden", m === "login");
+  document.getElementById("auth-submit-btn").textContent = m === "signup" ? "Kayıt Ol" : "Giriş Yap";
+  document.getElementById("auth-fb").textContent = "";
+}
+function submitAuth(){ authMode === "signup" ? signUp() : signIn(); }
+async function signUp(){
+  const name = document.getElementById("auth-name").value.trim();
+  const email = document.getElementById("auth-email").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const fb = document.getElementById("auth-fb");
+  if (!name){ fb.textContent = "Lütfen adınızı yazın."; fb.className = "feedback no"; return; }
+  if (!email || !EMAIL_RE.test(email)){ fb.textContent = "Geçerli bir e-posta girin."; fb.className = "feedback no"; return; }
+  if (!password || password.length < 6){ fb.textContent = "Şifre en az 6 karakter olmalı."; fb.className = "feedback no"; return; }
+  fb.textContent = "Kaydediliyor…"; fb.className = "feedback";
+  const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name } } });
+  if (error){ fb.textContent = error.message; fb.className = "feedback no"; return; }
+  if (!data.session){
+    setAuthMode("login");
+    fb.innerHTML = "✓ Kayıt oldunuz! E-postanıza gelen onay linkine tıklayın, sonra buradan giriş yapın.";
+    fb.className = "feedback ok";
+    return;
+  }
+  await boot();
+}
+async function signIn(){
+  const email = document.getElementById("auth-email").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const fb = document.getElementById("auth-fb");
+  if (!email || !password){ fb.textContent = "E-posta ve şifre girin."; fb.className = "feedback no"; return; }
+  fb.textContent = "Giriş yapılıyor…"; fb.className = "feedback";
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error){ fb.textContent = error.message; fb.className = "feedback no"; return; }
+  await boot();
+}
+async function forgotPassword(){
+  const email = document.getElementById("auth-email").value.trim();
+  const fb = document.getElementById("auth-fb");
+  if (!email || !EMAIL_RE.test(email)){ fb.textContent = "Önce e-posta adresinizi yazın."; fb.className = "feedback no"; return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email);
+  fb.textContent = error ? error.message : "✓ Şifre sıfırlama linki e-postanıza gönderildi.";
+  fb.className = "feedback " + (error ? "no" : "ok");
+}
+async function logout(){
+  await sb.auth.signOut();
+  location.reload();
+}
+function hideLoading(){ document.getElementById("boot-loading").classList.add("hidden"); }
+function showAuthOverlay(){ document.getElementById("auth-overlay").classList.remove("hidden"); }
+function hideAuthOverlay(){ document.getElementById("auth-overlay").classList.add("hidden"); }
+
+/* --- Profile page: avatar/photo, name, email, streak, badges --- */
+function renderAvatarPicker(){
+  const me = currentProfile();
+  document.getElementById("avatar-picker").innerHTML = `
+    <div class="profile-avatar" style="width:72px; height:72px; font-size:2.2rem; margin:0 auto 12px; ${me.photo ? "padding:0; overflow:hidden" : ""}">${avatarHTML(me, 72)}</div>
+    <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:12px">
+      ${AVATARS.map(a => `<button class="profile-avatar" style="cursor:pointer; padding:0; border:2px solid ${(!me.photo && a === me.avatar) ? "var(--accent)" : "transparent"}" onclick="setAvatar('${a}')">${a}</button>`).join("")}
+    </div>
+    <label class="btn ghost" style="cursor:pointer; display:inline-block">📷 Upload photo
+      <input type="file" accept="image/*" style="display:none" onchange="uploadPhoto(this)"></label>
+    ${me.photo ? `<button class="btn ghost" style="margin-left:8px" onclick="removePhoto()">✕ Remove photo</button>` : ""}`;
+}
+async function saveProfileField(fields){
+  Object.assign(myProfile, fields);
+  const { error } = await sb.from("profiles").update(fields).eq("id", myProfile.id);
+  if (error) console.error("profile save failed:", error.message);
+}
+function setAvatar(a){
+  saveProfileField({ avatar: a, photo: null }).then(renderAvatarPicker);
+}
+function uploadPhoto(input){
+  const f = input.files[0];
+  if (!f) return;
+  if (!f.type.startsWith("image/")) return alert("Please choose an image file.");
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 128, s = Math.min(img.width, img.height);
+      const canvas = document.createElement("canvas");
+      canvas.width = size; canvas.height = size;
+      canvas.getContext("2d").drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+      saveProfileField({ photo: canvas.toDataURL("image/jpeg", 0.85) }).then(renderAvatarPicker);
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(f);
+}
+function removePhoto(){
+  saveProfileField({ photo: null }).then(renderAvatarPicker);
+}
+async function saveProfileDetails(){
+  const name = document.getElementById("profile-name-in").value.trim();
+  const email = document.getElementById("profile-email-in").value.trim();
+  if (!name) return alert("Name can't be empty.");
+  if (email && !EMAIL_RE.test(email)) return alert("That doesn't look like a valid email.");
+  await saveProfileField({ name, email });
+  document.getElementById("profile-label").textContent = name;
+  document.getElementById("account-email-display").textContent = email;
+  renderHome();
+  const fb = document.getElementById("profile-save-fb");
+  fb.textContent = "✓ Saved!";
+  setTimeout(() => fb.textContent = "", 1800);
+}
+function getStreak(){
+  const raw = store.get("streak", {}) || {};
+  return {
+    current: raw.current ?? 0,
+    best: raw.best ?? 0,
+    totalDays: raw.totalDays ?? 0,
+    lastDay: raw.lastDay ?? null
+  };
+}
+function updateStreak(){
+  const t = todayN();
+  const s = getStreak();
+  if (s.lastDay === t){ store.set("streak", s); return s; }
+  s.current = (s.lastDay === t - 1) ? s.current + 1 : 1;
+  s.best = Math.max(s.best, s.current);
+  s.totalDays += 1;
+  s.lastDay = t;
+  store.set("streak", s);
+  return s;
+}
+function renderStreakStats(){
+  const s = getStreak();
+  document.getElementById("streak-stats").innerHTML = `
+    <div class="stat"><div class="num">🔥 ${s.current}</div><div class="lbl">Current streak (days)</div></div>
+    <div class="stat"><div class="num">${s.best}</div><div class="lbl">Longest streak</div></div>
+    <div class="stat"><div class="num">${s.totalDays}</div><div class="lbl">Total days practiced</div></div>`;
+}
+const BADGES = [
+  { icon:"🥇", name:"First Step", desc:"Complete your first lesson", test:s => s.doneCount >= 1 },
+  { icon:"📚", name:"Halfway There", desc:"Complete 5 lessons", test:s => s.doneCount >= 5 },
+  { icon:"🎓", name:"A1 Graduate", desc:"Complete all "+LESSONS.length+" lessons", test:s => s.doneCount >= LESSONS.length },
+  { icon:"🃏", name:"Word Collector", desc:"Master 25 words", test:s => s.mastered >= 25 },
+  { icon:"🏆", name:"Vocabulary Master", desc:"Master 75 words", test:s => s.mastered >= 75 },
+  { icon:"💯", name:"Perfectionist", desc:"Score 100% on a quiz", test:s => s.perfectQuizzes >= 1 },
+  { icon:"🔥", name:"On Fire", desc:"3-day streak", test:s => s.streak.current >= 3 },
+  { icon:"⚡", name:"Unstoppable", desc:"7-day streak", test:s => s.streak.current >= 7 },
+  { icon:"👑", name:"Dedicated Learner", desc:"30-day streak", test:s => s.streak.best >= 30 }
+];
+function renderBadges(){
+  const doneCount = Object.keys(done).length;
+  const mastered = allCards().filter(c => fc[c.key] && fc[c.key].box >= 4).length;
+  const perfectQuizzes = Object.values(scores).filter(sc => sc.right === sc.total).length;
+  const streak = getStreak();
+  const s = { doneCount, mastered, perfectQuizzes, streak };
+  document.getElementById("badge-grid").innerHTML = BADGES.map(b => {
+    const earned = b.test(s);
+    return `<div class="card" style="text-align:center; padding:16px; opacity:${earned ? 1 : .35}">
+      <div style="font-size:2rem">${b.icon}</div>
+      <div style="font-weight:700; margin-top:6px">${b.name}</div>
+      <div style="font-size:.8rem; color:var(--muted)">${b.desc}</div>
+    </div>`;
+  }).join("");
+}
+function renderProfile(){
+  const me = currentProfile();
+  if (!me) return;
+  renderAvatarPicker();
+  document.getElementById("profile-name-in").value = me.name;
+  document.getElementById("profile-email-in").value = me.email || "";
+  document.getElementById("account-email-display").textContent = me.email || "";
+  renderStreakStats();
+  renderBadges();
+  fillVoiceUI();
+}
+
+let done = {}, fc = {}, scores = {};
+
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+  .replace(/[¿?¡!.,]/g,"").replace(/\s+/g," ").trim();
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const todayN = () => Math.floor(Date.now() / 86400000);
+
+/* --- Voice quality: rank all Spanish voices, let the user pick, avoid clipping --- */
+let esVoice = null, esVoices = [];
+function voiceScore(v){
+  const n = v.name.toLowerCase();
+  let s = 0;
+  if (/natural|neural|online/.test(n)) s += 6;        // Microsoft Edge natural voices — best
+  if (/premium|enhanced|siri/.test(n)) s += 5;        // macOS/iOS high-quality voices
+  if (/google/.test(n)) s += 4;                       // Google español — very good in Chrome
+  if (/mónica|monica|paulina|elvira|dalia|helena|laura|lucía|lucia|sabina|jorge|diego|alvaro|álvaro/.test(n)) s += 2;
+  if (v.lang === "es-ES") s += 2;
+  else if (v.lang.startsWith("es")) s += 1;
+  if (/espeak|compact|robosoft/.test(n)) s -= 8;      // robotic voices — avoid
+  return s;
+}
+function pickVoice(){
+  esVoices = speechSynthesis.getVoices()
+    .filter(v => v.lang.toLowerCase().startsWith("es"))
+    .sort((a,b) => voiceScore(b) - voiceScore(a));
+  const savedName = store.get("voice", null);
+  esVoice = esVoices.find(v => v.name === savedName) || esVoices[0] || null;
+  fillVoiceUI();
+}
+if ("speechSynthesis" in window){
+  pickVoice();
+  speechSynthesis.onvoiceschanged = pickVoice;
+  // some browsers need a nudge to load voices
+  setTimeout(pickVoice, 300);
+}
+function fillVoiceUI(){
+  const sel = document.getElementById("voice-sel");
+  if (!sel) return;
+  if (!esVoices.length){
+    sel.innerHTML = `<option>No Spanish voice found — install one in your system settings</option>`;
+    return;
+  }
+  sel.innerHTML = esVoices.map(v =>
+    `<option value="${esc(v.name)}" ${esVoice && v.name === esVoice.name ? "selected" : ""}>${v.name} (${v.lang})${voiceScore(v) >= 6 ? " ⭐" : ""}</option>`).join("");
+}
+function setVoice(name){
+  const v = esVoices.find(x => x.name === name);
+  if (v){ esVoice = v; store.set("voice", name); }
+}
+function setRate(val){
+  store.set("rate", parseFloat(val));
+  document.getElementById("rate-val").textContent = val + "×";
+}
+let speakTimer = null;
+function speak(text, rate){
+  if (!("speechSynthesis" in window)) return alert("Your browser has no speech feature. Try Chrome or Edge.");
+  speechSynthesis.cancel();
+  clearTimeout(speakTimer);
+  // small delay after cancel() prevents the crackle/clipped start heard in some browsers
+  speakTimer = setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = esVoice ? esVoice.lang : "es-ES";
+    if (esVoice) u.voice = esVoice;
+    u.rate = rate || store.get("rate", 0.85);
+    u.pitch = 1;
+    u.volume = 1;
+    speechSynthesis.speak(u);
+  }, 80);
+}
+
+/* ================= NAVIGATION ================= */
+document.querySelectorAll(".nav-btn[data-sec]").forEach(b => b.onclick = () => show(b.dataset.sec));
+function toggleTheme(){
+  const dark = document.body.classList.toggle("dark");
+  store.set("theme", dark ? "dark" : "light");
+  const btn = document.getElementById("theme-btn");
+  btn.innerHTML = dark
+    ? `<span class="nav-emoji">☀️</span><span class="nav-label">Light mode</span>`
+    : `<span class="nav-emoji">🌙</span><span class="nav-label">Dark mode</span>`;
+}
+function show(sec){
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("visible"));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.sec === sec));
+  $("#" + sec).classList.add("visible");
+  if (sec === "home") renderHome();
+  if (sec === "lessons") renderLessonList();
+  if (sec === "flashcards") renderFC();
+  if (sec === "listening") newListen();
+  if (sec === "speaking") newSpeak();
+  if (sec === "progress") renderProgress();
+  if (sec === "verbs") newVerb();
+  if (sec === "profile") renderProfile();
+}
+
+/* ================= HOME ================= */
+function renderHome(){
+  const me = currentProfile();
+  $("#greeting").innerHTML = me
+    ? `<span class="profile-avatar" style="display:inline-flex; width:34px; height:34px; font-size:1.2rem; vertical-align:middle; margin-right:8px; ${me.photo ? "padding:0; overflow:hidden" : ""}">${avatarHTML(me, 34)}</span>¡Bienvenida, ${esc(me.name)}! 👋`
+    : "¡Bienvenida! 👋";
+  const doneCount = Object.keys(done).length;
+  $("#st-lessons").textContent = doneCount + "/" + LESSONS.length;
+  let mastered = 0, due = 0;
+  allCards().forEach(c => {
+    const st = fc[c.key];
+    if (st && st.box >= 4) mastered++;
+    if (!st || st.due <= todayN()) due++;
+  });
+  $("#st-words").textContent = mastered;
+  $("#st-streak").textContent = due;
+  const lastId = store.get("last", null);
+  const next = (lastId && !done[lastId] && LESSONS.find(l => l.id === lastId))
+    || LESSONS.find(l => !done[l.id]);
+  const resuming = next && lastId === next.id && !done[next.id];
+  $("#continue-card").innerHTML = next
+    ? `<h2 style="margin-top:0">${resuming ? "Pick up where you left off 📍" : "Continue learning ➡️"}</h2>
+       <p>${resuming ? "You were on" : "Next up"}: <b>Lesson ${next.id} — ${next.title}</b></p>
+       <p style="color:var(--muted); font-size:.88rem; margin-bottom:12px">${next.subtitle}</p>
+       <button class="btn" onclick="openLesson(${next.id})">${resuming ? "Resume" : "Start"} Lesson ${next.id}</button>`
+    : `<h2 style="margin-top:0">🎉 ¡Felicidades!</h2>
+       <p>You finished the whole A1 course! Keep the momentum: review flashcards daily and pick a resource from the Free Resources library.</p>`;
+}
+
+/* ================= LESSONS ================= */
+function renderLessonList(){
+  $("#lesson-list").innerHTML = LESSONS.map(l => `
+    <div class="card lesson-item ${done[l.id] ? "done" : ""}" onclick="openLesson(${l.id})">
+      <div class="lesson-num">${done[l.id] ? "✓" : l.id}</div>
+      <div><h3>${l.title}</h3><p>${l.subtitle}</p></div>
+    </div>`).join("");
+}
+
+function openLesson(id){
+  const l = LESSONS.find(x => x.id === id);
+  store.set("last", id);
+  const v = $("#lesson-view");
+  v.innerHTML = `
+    <button class="back" onclick="show('lessons')">← Back to lessons</button>
+    <h1>Lesson ${l.id}: ${l.title}</h1>
+    <p class="sub">${l.subtitle}</p>
+
+    <div class="card"><h2 style="margin-top:0">📖 Vocabulary <span style="font-size:.8rem; color:var(--muted); font-weight:400">(click 🔊 to hear it)</span></h2>
+      <table class="vocab">${l.vocab.map(w => `
+        <tr><td>${w[0]}</td><td>${w[1]}</td>
+        <td style="text-align:right"><button class="speak-btn" onclick="speak('${esc(w[0]).replace(/'/g,"\\'")}')">🔊</button></td></tr>`).join("")}
+      </table></div>
+
+    <div class="card grammar"><h2 style="margin-top:0">✏️ Grammar</h2>${l.grammar}</div>
+
+    <div class="card"><h2 style="margin-top:0">💬 Example sentences <span style="font-size:.8rem; color:var(--muted); font-weight:400">(hover any underlined word to see its meaning)</span></h2>
+      ${l.examples.map(e => `
+        <div class="example">
+          <button class="speak-btn" onclick="speak('${esc(e[0]).replace(/'/g,"\\'")}')">🔊</button>
+          <div><div class="es">${tipify(e[0])}</div><div class="en">${e[1]}</div></div>
+        </div>`).join("")}</div>
+
+    <div class="card"><h2 style="margin-top:0">🧩 Quiz</h2><div id="quiz-box"></div>
+      <div id="quiz-result" style="margin-top:10px; font-weight:700"></div>
+      <button class="btn" id="finish-btn" style="margin-top:10px; display:none"
+        onclick="completeLesson(${l.id})">✓ Mark lesson as complete</button></div>`;
+  renderQuiz(l);
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("visible"));
+  v.classList.add("visible");
+  window.scrollTo(0,0);
+}
+
+let quizState = {};
+function renderQuiz(l){
+  quizState = { lid: l.id, total: l.quiz.length, right: 0, answered: 0 };
+  $("#quiz-box").innerHTML = l.quiz.map((q,i) => {
+    if (q.type === "type"){
+      return `<div class="quiz-q"><div class="qt">${i+1}. ${q.q}</div>
+        <input class="type-in" id="ti-${i}" autocomplete="off" onkeydown="if(event.key==='Enter')checkType(${l.id},${i})">
+        <button class="btn ghost" onclick="checkType(${l.id},${i})">Check</button>
+        <div class="feedback" id="fb-${i}"></div></div>`;
+    }
+    return `<div class="quiz-q"><div class="qt">${i+1}. ${q.q}</div>
+      ${q.o.map((o,j) => `<button class="opt" id="opt-${i}-${j}" onclick="checkMC(${l.id},${i},${j})">${o}</button>`).join("")}
+      <div class="feedback" id="fb-${i}"></div></div>`;
+  }).join("");
+}
+function markAnswered(ok){
+  quizState.answered++;
+  if (ok) quizState.right++;
+  if (quizState.answered >= quizState.total){
+    $("#quiz-result").innerHTML = `Score: ${quizState.right}/${quizState.total} ${quizState.right === quizState.total ? "— ¡Perfecto! 🌟" : quizState.right >= quizState.total-1 ? "— ¡Muy bien! 👏" : "— Review the grammar and try the lesson again soon."}
+      <button class="btn ghost" style="margin-left:10px" onclick="retryQuiz()">↻ Try again</button>`;
+    $("#finish-btn").style.display = "inline-block";
+    const prev = scores[quizState.lid];
+    if (!prev || quizState.right > prev.right){
+      scores[quizState.lid] = { right: quizState.right, total: quizState.total, date: new Date().toISOString().slice(0,10) };
+      store.set("scores", scores);
+    }
+  }
+}
+function checkMC(lid, qi, oj){
+  const l = LESSONS.find(x => x.id === lid), q = l.quiz[qi];
+  if (document.getElementById("fb-"+qi).dataset.done) return;
+  document.getElementById("fb-"+qi).dataset.done = "1";
+  const ok = oj === q.a;
+  document.getElementById(`opt-${qi}-${oj}`).classList.add(ok ? "correct" : "wrong");
+  document.getElementById(`opt-${qi}-${q.a}`).classList.add("correct");
+  const fb = document.getElementById("fb-"+qi);
+  fb.textContent = ok ? "✓ Correct!" : "✗ Correct answer: " + q.o[q.a];
+  fb.className = "feedback " + (ok ? "ok" : "no");
+  markAnswered(ok);
+}
+function checkType(lid, qi){
+  const l = LESSONS.find(x => x.id === lid), q = l.quiz[qi];
+  const fb = document.getElementById("fb-"+qi);
+  if (fb.dataset.done) return;
+  const val = norm(document.getElementById("ti-"+qi).value);
+  if (!val) return;
+  fb.dataset.done = "1";
+  const answers = [q.a].concat(q.alt || []).map(norm);
+  const ok = answers.includes(val);
+  fb.textContent = ok ? "✓ Correct!" : "✗ Correct answer: " + q.a;
+  fb.className = "feedback " + (ok ? "ok" : "no");
+  markAnswered(ok);
+}
+function retryQuiz(){
+  const l = LESSONS.find(x => x.id === quizState.lid);
+  renderQuiz(l);
+  $("#quiz-result").innerHTML = "";
+  $("#finish-btn").style.display = "none";
+}
+function completeLesson(id){
+  done[id] = true;
+  store.set("done", done);
+  show("lessons");
+}
+
+/* ================= FLASHCARDS ================= */
+const BOX_DAYS = [0, 0, 1, 2, 4, 7];
+function allCards(){
+  const cards = [];
+  LESSONS.forEach(l => l.vocab.forEach(w => cards.push({ key: l.id + "|" + w[0], es: w[0], en: w[1], lesson: l.id })));
+  return cards;
+}
+let fcQueue = [], fcCur = null, fcFlipped = false;
+function fcDirTabs(){
+  const dir = store.get("fcdir", "es");
+  const tabs = [["es","🇪🇸 ES → EN"],["en","🇬🇧 EN → ES"],["mix","🔀 Mixed"]];
+  return `<div class="mode-tabs">${tabs.map(t =>
+    `<button class="mode-tab ${dir === t[0] ? "active" : ""}" onclick="setFcDir('${t[0]}')">${t[1]}</button>`).join("")}</div>`;
+}
+function setFcDir(d){ store.set("fcdir", d); renderFC(); }
+function renderFC(){
+  const t = todayN();
+  fcQueue = allCards().filter(c => { const st = fc[c.key]; return !st || st.due <= t; });
+  fcQueue.sort(() => Math.random() - 0.5);
+  nextCard();
+}
+function nextCard(){
+  const area = $("#fc-area");
+  if (!fcQueue.length){
+    const total = allCards().length;
+    const mastered = allCards().filter(c => fc[c.key] && fc[c.key].box >= 4).length;
+    area.innerHTML = `<div class="card center"><h2 style="margin-top:0">All done for today! 🎉</h2>
+      <p>No cards due right now. Come back tomorrow — spaced repetition works best daily.</p>
+      <div class="progress-bar"><div style="width:${Math.round(mastered/total*100)}%"></div></div>
+      <p style="color:var(--muted); font-size:.85rem">${mastered}/${total} words mastered</p>
+      <button class="btn ghost" style="margin-top:8px" onclick="resetTodayFC()">Practice anyway (extra round)</button></div>`;
+    return;
+  }
+  fcCur = fcQueue[0]; fcFlipped = false;
+  const dir = store.get("fcdir", "es");
+  fcCur.front = dir === "mix" ? (Math.random() < 0.5 ? "es" : "en") : dir;
+  const frontText = fcCur.front === "es" ? fcCur.es : fcCur.en;
+  area.innerHTML = `<div class="fc-stage">
+    ${fcDirTabs()}
+    <div class="fc-meta">${fcQueue.length} card${fcQueue.length>1?"s":""} left · Lesson ${fcCur.lesson}</div>
+    <div class="fc-card" id="fc-card" onclick="flipCard()">
+      <div id="fc-face">${frontText}</div>
+      <div class="hint" id="fc-hint">${fcCur.front === "en" ? "think of the Spanish, then " : ""}click to reveal · 🔊 below to listen</div>
+    </div>
+    <div class="fc-actions">
+      <button class="btn ghost" onclick="speak('${esc(fcCur.es).replace(/'/g,"\\'")}')">🔊 Listen</button>
+      <button class="btn" style="background:var(--accent)" onclick="answerFC(false)">✗ Again</button>
+      <button class="btn" style="background:var(--green)" onclick="answerFC(true)">✓ Got it</button>
+    </div></div>`;
+}
+function flipCard(){
+  fcFlipped = !fcFlipped;
+  const front = fcCur.front === "es" ? fcCur.es : fcCur.en;
+  const back = fcCur.front === "es" ? fcCur.en : fcCur.es;
+  $("#fc-face").textContent = fcFlipped ? back : front;
+  $("#fc-hint").textContent = fcFlipped
+    ? (fcCur.front === "en" ? "the Spanish — did you get it?" : "English meaning")
+    : "click to reveal · 🔊 below to listen";
+  if (fcFlipped && fcCur.front === "en") speak(fcCur.es);
+}
+function answerFC(ok){
+  const st = fc[fcCur.key] || { box: 1, due: todayN() };
+  st.box = ok ? Math.min(st.box + 1, 5) : 1;
+  st.due = todayN() + BOX_DAYS[st.box];
+  fc[fcCur.key] = st;
+  store.set("fc", fc);
+  fcQueue.shift();
+  if (!ok) fcQueue.push(fcCur);
+  nextCard();
+}
+function resetTodayFC(){
+  fcQueue = allCards().sort(() => Math.random() - 0.5).slice(0, 15);
+  nextCard();
+}
+
+/* ================= LISTENING ================= */
+let listenCur = null, listenDone = false;
+function allExamples(){
+  const ex = [];
+  LESSONS.forEach(l => l.examples.forEach(e => ex.push({ es: e[0], en: e[1] })));
+  return ex;
+}
+function listenTabs(){
+  const m = store.get("lmode", "mc");
+  return `<div class="mode-tabs" style="justify-content:center">
+    <button class="mode-tab ${m === "mc" ? "active" : ""}" onclick="setLMode('mc')">🎯 Multiple choice</button>
+    <button class="mode-tab ${m === "dict" ? "active" : ""}" onclick="setLMode('dict')">✍️ Dictation</button>
+  </div>`;
+}
+function setLMode(m){ store.set("lmode", m); newListen(); }
+function newListen(){
+  if (store.get("lmode", "mc") === "dict") return newDictation();
+  listenDone = false;
+  const ex = allExamples();
+  listenCur = ex[Math.floor(Math.random() * ex.length)];
+  const wrong = ex.filter(e => e.en !== listenCur.en).sort(() => Math.random() - 0.5).slice(0, 3);
+  const opts = [listenCur, ...wrong].sort(() => Math.random() - 0.5);
+  $("#listen-area").innerHTML = `<div class="card center">
+    ${listenTabs()}
+    <p style="color:var(--muted)">Press play, listen carefully, then choose the meaning.</p>
+    <div style="margin:16px 0">
+      <button class="btn" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.85)">▶️ Play</button>
+      <button class="btn ghost" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.6)">🐢 Slow</button>
+    </div>
+    <div style="max-width:520px; margin:0 auto; text-align:left">
+      ${opts.map(o => `<button class="opt" onclick="checkListen(this,'${esc(o.en).replace(/'/g,"\\'")}')">${o.en}</button>`).join("")}
+    </div>
+    <div class="feedback" id="listen-fb" style="font-size:1rem; margin-top:10px"></div>
+    <button class="btn ghost" style="margin-top:12px" onclick="newListen()">Next sentence →</button></div>`;
+}
+function checkListen(btn, en){
+  if (listenDone) return;
+  listenDone = true;
+  const ok = en === listenCur.en;
+  btn.classList.add(ok ? "correct" : "wrong");
+  const fb = $("#listen-fb");
+  fb.innerHTML = ok ? `✓ ¡Correcto! The sentence was: <b>${listenCur.es}</b>`
+                    : `✗ It was: <b>${listenCur.es}</b> — "${listenCur.en}"`;
+  fb.className = "feedback " + (ok ? "ok" : "no");
+}
+
+function newDictation(){
+  listenDone = false;
+  const ex = allExamples();
+  listenCur = ex[Math.floor(Math.random() * ex.length)];
+  $("#listen-area").innerHTML = `<div class="card center">
+    ${listenTabs()}
+    <p style="color:var(--muted)">Listen, then type exactly what you hear. Accents are forgiven 😉</p>
+    <div style="margin:16px 0">
+      <button class="btn" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.8)">▶️ Play</button>
+      <button class="btn ghost" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.55)">🐢 Slow</button>
+    </div>
+    <input class="type-in" id="dict-in" style="width:min(480px,100%)" autocomplete="off"
+      placeholder="Type the sentence here..." onkeydown="if(event.key==='Enter')checkDictation()">
+    <div style="margin-top:12px"><button class="btn" onclick="checkDictation()">Check</button></div>
+    <div class="feedback" id="listen-fb" style="font-size:1rem; margin-top:12px"></div>
+    <button class="btn ghost" style="margin-top:12px" onclick="newListen()">Next sentence →</button></div>`;
+}
+function checkDictation(){
+  if (listenDone) return;
+  const val = document.getElementById("dict-in").value;
+  if (!val.trim()) return;
+  listenDone = true;
+  const fb = $("#listen-fb");
+  const target = listenCur.es;
+  const userW = norm(val).split(" "), targetW = norm(target).split(" ");
+  const marked = target.split(" ").map((w, i) => {
+    const p = w.match(/^([¿¡"']*)(.*?)([?!.,:;—"']*)$/);
+    const ok = userW[i] !== undefined && norm(userW[i] || "") === norm(p[2]);
+    return p[1] + `<span style="color:${ok ? "var(--green)" : "var(--accent)"}; font-weight:700">${p[2]}</span>` + p[3];
+  }).join(" ");
+  const score = similarity(norm(val), norm(target));
+  fb.innerHTML = (score >= 0.95 ? "✓ ¡Perfecto! " : score >= 0.7 ? "Almost! " : "Keep practicing — ") +
+    `<br><span style="font-size:1.1rem">${marked}</span><br>
+     <span style="color:var(--muted); font-size:.85rem">"${listenCur.en}" · accuracy: ${Math.round(score*100)}%</span>`;
+  fb.className = "feedback " + (score >= 0.7 ? "ok" : "no");
+}
+
+/* ================= VERB TRAINER ================= */
+const VERBS = {
+  "ser (to be — permanent)":["soy","eres","es","somos","sois","son"],
+  "estar (to be — state/place)":["estoy","estás","está","estamos","estáis","están"],
+  "tener (to have)":["tengo","tienes","tiene","tenemos","tenéis","tienen"],
+  "ir (to go)":["voy","vas","va","vamos","vais","van"],
+  "querer (to want)":["quiero","quieres","quiere","queremos","queréis","quieren"],
+  "hablar (to speak)":["hablo","hablas","habla","hablamos","habláis","hablan"],
+  "comer (to eat)":["como","comes","come","comemos","coméis","comen"],
+  "vivir (to live)":["vivo","vives","vive","vivimos","vivís","viven"]
+};
+const PRONOUNS = ["yo","tú","él / ella","nosotros","vosotros","ellos / ellas"];
+let verbCur = null, verbStreak = 0, verbDone = false;
+function newVerb(){
+  verbDone = false;
+  const names = Object.keys(VERBS);
+  const name = names[Math.floor(Math.random() * names.length)];
+  const pi = Math.floor(Math.random() * 6);
+  verbCur = { name, pi, answer: VERBS[name][pi] };
+  $("#verb-area").innerHTML = `<div class="card center">
+    <div class="streak">🔥 Streak: ${verbStreak}</div>
+    <p style="color:var(--muted); margin-top:10px">Conjugate:</p>
+    <div class="big-es">${verbCur.name.split(" (")[0]} <span style="color:var(--muted); font-size:1rem; font-weight:400">(${verbCur.name.split("(")[1]}</span></div>
+    <div style="font-size:1.2rem; margin-bottom:14px"><b>${PRONOUNS[pi]}</b> ______</div>
+    <input class="type-in" id="verb-in" autocomplete="off" style="text-align:center"
+      onkeydown="if(event.key==='Enter')checkVerb()">
+    <div style="margin-top:12px">
+      <button class="btn" onclick="checkVerb()">Check</button>
+      <button class="btn ghost" onclick="showVerbTable()">📖 Show table</button>
+    </div>
+    <div class="feedback" id="verb-fb" style="font-size:1rem; margin-top:12px"></div>
+    <div id="verb-table" style="margin-top:10px"></div>
+    <button class="btn ghost" style="margin-top:12px" onclick="newVerb()">Next verb →</button></div>`;
+  document.getElementById("verb-in").focus();
+}
+function checkVerb(){
+  if (verbDone) return;
+  const val = norm(document.getElementById("verb-in").value);
+  if (!val) return;
+  verbDone = true;
+  const fb = $("#verb-fb");
+  const ok = val === norm(verbCur.answer);
+  if (ok){
+    verbStreak++;
+    fb.innerHTML = `✓ ¡Correcto! <b>${PRONOUNS[verbCur.pi]} ${verbCur.answer}</b>`;
+    fb.className = "feedback ok";
+    speak(verbCur.answer);
+    setTimeout(newVerb, 1100);
+  } else {
+    verbStreak = 0;
+    fb.innerHTML = `✗ It's <b>${PRONOUNS[verbCur.pi]} ${verbCur.answer}</b> — streak reset, keep going!`;
+    fb.className = "feedback no";
+    speak(verbCur.answer);
+  }
+}
+function showVerbTable(){
+  $("#verb-table").innerHTML = `<table class="vocab" style="max-width:340px; margin:0 auto">
+    ${VERBS[verbCur.name].map((f, i) => `<tr><td>${PRONOUNS[i]}</td><td><b>${f}</b></td></tr>`).join("")}
+  </table>`;
+}
+
+/* ================= SPEAKING ================= */
+let speakCur = null, recog = null;
+function newSpeak(){
+  const pool = allExamples().concat(allCards().map(c => ({ es: c.es, en: c.en })));
+  speakCur = pool[Math.floor(Math.random() * pool.length)];
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  $("#speak-area").innerHTML = `<div class="card center">
+    <p style="color:var(--muted)">Say this out loud:</p>
+    <div class="big-es">${speakCur.es}</div>
+    <p style="color:var(--muted); font-size:.9rem; margin-bottom:16px">"${speakCur.en}" ·
+      <button class="speak-btn" onclick="speak('${esc(speakCur.es).replace(/'/g,"\\'")}')">🔊 hear it first</button></p>
+    ${SR ? `<button class="mic-btn" id="mic" onclick="startRecog()">🎤</button>
+            <p style="color:var(--muted); font-size:.82rem; margin-top:8px">tap and speak</p>`
+         : `<p style="color:var(--accent)">⚠️ Speech recognition isn't supported in this browser. Use Chrome or Edge, or simply repeat after the 🔊 audio.</p>`}
+    <div class="feedback" id="speak-fb" style="font-size:1rem; margin-top:12px"></div>
+    <button class="btn ghost" style="margin-top:14px" onclick="newSpeak()">Next phrase →</button></div>`;
+}
+function startRecog(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recog = new SR();
+  recog.lang = "es-ES";
+  recog.interimResults = false;
+  const mic = $("#mic"), fb = $("#speak-fb");
+  mic.classList.add("listening");
+  fb.textContent = "Listening... speak now";
+  fb.className = "feedback";
+  recog.onresult = e => {
+    const heard = e.results[0][0].transcript;
+    const score = similarity(norm(heard), norm(speakCur.es));
+    if (score >= 0.8){ fb.innerHTML = `✓ ¡Excelente! I heard: "<b>${heard}</b>"`; fb.className = "feedback ok"; }
+    else if (score >= 0.5){ fb.innerHTML = `Almost! I heard: "<b>${heard}</b>" — try again, a bit slower.`; fb.className = "feedback no"; }
+    else { fb.innerHTML = `I heard: "<b>${heard}</b>" — listen with 🔊 and try again.`; fb.className = "feedback no"; }
+  };
+  recog.onerror = e => { fb.textContent = e.error === "not-allowed" ? "Microphone permission needed — allow it in your browser." : "Didn't catch that — try again."; fb.className = "feedback no"; };
+  recog.onend = () => mic.classList.remove("listening");
+  recog.start();
+}
+function similarity(a, b){
+  if (!a.length || !b.length) return 0;
+  const m = [];
+  for (let i = 0; i <= a.length; i++){ m[i] = [i]; }
+  for (let j = 0; j <= b.length; j++){ m[0][j] = j; }
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++)
+      m[i][j] = Math.min(m[i-1][j] + 1, m[i][j-1] + 1, m[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  return 1 - m[a.length][b.length] / Math.max(a.length, b.length);
+}
+
+/* ================= PROGRESS ================= */
+function wordStatus(){
+  const groups = { mastered: [], learning: [], hard: [], unseen: [] };
+  allCards().forEach(c => {
+    const st = fc[c.key];
+    if (!st) groups.unseen.push(c);
+    else if (st.box >= 4) groups.mastered.push(c);
+    else if (st.box >= 2) groups.learning.push(c);
+    else groups.hard.push(c);
+  });
+  return groups;
+}
+function renderProgress(){
+  const g = wordStatus(), total = allCards().length;
+  const doneCount = Object.keys(done).length;
+  const pctLessons = Math.round(doneCount / LESSONS.length * 100);
+  const pctWords = Math.round(g.mastered.length / total * 100);
+  $("#progress-area").innerHTML = `
+    <div class="card">
+      <h2 style="margin-top:0">Overview</h2>
+      <p><b>Lessons:</b> ${doneCount}/${LESSONS.length} completed</p>
+      <div class="progress-bar"><div style="width:${pctLessons}%"></div></div>
+      <p style="margin-top:14px"><b>Vocabulary:</b> ${g.mastered.length}/${total} words mastered
+        · ${g.learning.length} learning · ${g.hard.length} need practice · ${g.unseen.length} not started</p>
+      <div class="progress-bar"><div style="width:${pctWords}%"></div></div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Lesson by lesson</h2>
+      <table class="vocab">
+        <tr><td style="font-weight:700">Lesson</td><td style="font-weight:700">Status</td><td style="font-weight:700">Best quiz score</td></tr>
+        ${LESSONS.map(l => {
+          const s = scores[l.id];
+          return `<tr>
+            <td style="font-weight:400">${l.id}. ${l.title}</td>
+            <td>${done[l.id] ? "✅ Completed" : store.get("last",null) === l.id ? "📍 In progress" : "—"}</td>
+            <td>${s ? s.right + "/" + s.total + " <span style='color:var(--muted); font-size:.8rem'>(" + s.date + ")</span>" : "—"}</td>
+          </tr>`;
+        }).join("")}
+      </table>
+      <p style="color:var(--muted); font-size:.85rem; margin-top:10px">💡 Click any lesson in the Lessons tab to revisit it any time — completed lessons stay open for review.</p>
+    </div>
+
+    ${g.hard.length ? `<div class="card">
+      <h2 style="margin-top:0">🔁 Words that need practice</h2>
+      <p style="color:var(--muted); font-size:.86rem; margin-bottom:8px">You marked these "Again" recently — they'll show up first in Flashcards.</p>
+      <table class="vocab">${g.hard.map(c => `<tr><td>${c.es}</td><td>${c.en}</td>
+        <td style="text-align:right"><button class="speak-btn" onclick="speak('${esc(c.es).replace(/'/g,"\\'")}')">🔊</button></td></tr>`).join("")}</table>
+    </div>` : ""}
+
+    <div class="card">
+      <h2 style="margin-top:0">📤 Take your learning anywhere</h2>
+      <p style="color:var(--muted); font-size:.88rem; margin-bottom:12px">Export your words to study in other free apps, or back up your progress to move it to another browser or computer.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn ghost" onclick="exportAnki()">🃏 Word list for Anki (.csv)</button>
+        <button class="btn ghost" onclick="exportWordList()">📄 Printable word list (.txt)</button>
+        <button class="btn ghost" onclick="exportBackup()">💾 Back up my progress (.json)</button>
+        <label class="btn ghost" style="cursor:pointer">📥 Restore a backup
+          <input type="file" accept=".json" style="display:none" onchange="importBackup(this)"></label>
+      </div>
+      <p style="color:var(--muted); font-size:.8rem; margin-top:10px">Anki tip: File → Import, choose the .csv — front is Spanish, back is English. Anki is free: apps.ankiweb.net</p>
+    </div>`;
+}
+
+function download(name, text, mime){
+  const blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function exportAnki(){
+  const rows = allCards().map(c => '"' + c.es.replace(/"/g,'""') + '";"' + c.en.replace(/"/g,'""') + '"');
+  download("spanish-words-anki.csv", rows.join("\n"), "text/csv");
+}
+function exportWordList(){
+  const g = wordStatus();
+  let txt = "MY SPANISH WORD LIST — aprende-espanol\n" + "=".repeat(40) + "\n";
+  const section = (title, arr) => arr.length ? "\n" + title + "\n" + "-".repeat(30) + "\n" +
+    arr.map(c => c.es.padEnd(28) + c.en).join("\n") + "\n" : "";
+  txt += section("✔ MASTERED (" + g.mastered.length + ")", g.mastered);
+  txt += section("~ STILL LEARNING (" + g.learning.length + ")", g.learning);
+  txt += section("! NEED PRACTICE (" + g.hard.length + ")", g.hard);
+  txt += section("· NOT STARTED (" + g.unseen.length + ")", g.unseen);
+  download("spanish-word-list.txt", txt);
+}
+function exportBackup(){
+  download("spanish-progress-backup.json", JSON.stringify({
+    version: 1, exported: new Date().toISOString(),
+    done, fc, scores, last: store.get("last", null), rate: store.get("rate", 0.85)
+  }, null, 2), "application/json");
+}
+function importBackup(input){
+  const f = input.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const d = JSON.parse(r.result);
+      if (!d.done && !d.fc) throw 0;
+      done = d.done || {}; fc = d.fc || {}; scores = d.scores || {};
+      store.set("done", done); store.set("fc", fc); store.set("scores", scores);
+      if (d.last) store.set("last", d.last);
+      if (d.rate) store.set("rate", d.rate);
+      renderProgress();
+      alert("✓ Progress restored! Welcome back.");
+    }catch(e){ alert("That doesn't look like a valid backup file."); }
+  };
+  r.readAsText(f);
+}
+
+/* ================= RESOURCES ================= */
+$("#res-grid").innerHTML = RESOURCES.map(r => `
+  <div class="card res-card">
+    <h3><a href="${r.u}" target="_blank" rel="noopener">${r.n} ↗</a></h3>
+    <div>${r.t.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+    <p style="margin-top:8px">${r.d}</p>
+  </div>`).join("");
+
+/* ================= INIT ================= */
+async function boot(){
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session){
+    hideLoading();
+    showAuthOverlay();
+    return;
+  }
+  const uid = session.user.id;
+
+  let { data: profileRow } = await sb.from("profiles").select("*").eq("id", uid).maybeSingle();
+  if (!profileRow){
+    const name = (session.user.user_metadata && session.user.user_metadata.name) || session.user.email.split("@")[0];
+    const ins = await sb.from("profiles").insert({ id: uid, email: session.user.email, name, avatar: AVATARS[0] }).select().single();
+    profileRow = ins.data;
+  }
+  myProfile = profileRow;
+
+  let { data: progressRow } = await sb.from("progress").select("*").eq("user_id", uid).maybeSingle();
+  if (!progressRow){
+    const ins = await sb.from("progress").insert({ user_id: uid }).select().single();
+    progressRow = ins.data;
+  }
+  progressCache = progressRow || {};
+
+  done = store.get("done", {});
+  fc = store.get("fc", {});
+  scores = store.get("scores", {});
+
+  hideAuthOverlay();
+  hideLoading();
+  document.getElementById("profile-label").textContent = myProfile.name;
+  if (store.get("theme", "light") === "dark"){
+    document.body.classList.add("dark");
+    document.getElementById("theme-btn").innerHTML =
+      `<span class="nav-emoji">☀️</span><span class="nav-label">Light mode</span>`;
+  }
+  const savedRate = store.get("rate", 0.85);
+  document.getElementById("rate-slider").value = savedRate;
+  document.getElementById("rate-val").textContent = savedRate + "×";
+  fillVoiceUI();
+  updateStreak();
+  renderHome();
+  renderLessonList();
+}
+boot();
+</script>
+</body>
+</html>
