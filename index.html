@@ -36,6 +36,12 @@
   .nav-btn:hover{background:var(--accent-soft);}
   .nav-btn.active{background:var(--accent); color:#fff; font-weight:600;}
   .nav-emoji{font-size:1.1rem;}
+  .icon{width:1em; height:1em; vertical-align:-0.15em; flex-shrink:0;}
+  h1 .icon, h2 .icon{width:.85em; height:.85em; vertical-align:-0.08em; margin-right:2px;}
+  .nav-emoji .icon{width:1.1rem; height:1.1rem; vertical-align:-0.2rem;}
+  .step-num{display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px;
+    border-radius:50%; background:var(--accent-soft); color:var(--accent); font-size:.75rem;
+    font-weight:800; vertical-align:middle; margin-right:2px;}
 
   /* Main */
   main{flex:1; padding:32px clamp(16px,4vw,48px); max-width:980px;}
@@ -212,16 +218,16 @@
 <div class="app">
   <nav class="sidebar">
     <div class="logo">¡Aprende <span>Español</span>!</div>
-    <button class="nav-btn active" data-sec="home"><span class="nav-emoji">🏠</span><span class="nav-label">Home</span></button>
-    <button class="nav-btn" data-sec="lessons"><span class="nav-emoji">📚</span><span class="nav-label">Lessons</span></button>
-    <button class="nav-btn" data-sec="flashcards"><span class="nav-emoji">🃏</span><span class="nav-label">Flashcards</span></button>
-    <button class="nav-btn" data-sec="listening"><span class="nav-emoji">🎧</span><span class="nav-label">Listening</span></button>
-    <button class="nav-btn" data-sec="speaking"><span class="nav-emoji">🎤</span><span class="nav-label">Speaking</span></button>
-    <button class="nav-btn" data-sec="verbs"><span class="nav-emoji">⚙️</span><span class="nav-label">Verb Trainer</span></button>
-    <button class="nav-btn" data-sec="progress"><span class="nav-emoji">📊</span><span class="nav-label">My Progress</span></button>
-    <button class="nav-btn" data-sec="resources"><span class="nav-emoji">🌍</span><span class="nav-label">Free Resources</span></button>
-    <button class="nav-btn" id="theme-btn" onclick="toggleTheme()" style="margin-top:14px"><span class="nav-emoji">🌙</span><span class="nav-label">Dark mode</span></button>
-    <button class="nav-btn" data-sec="profile" id="profile-btn"><span class="nav-emoji">👤</span><span class="nav-label" id="profile-label">Profile</span></button>
+    <button class="nav-btn active" data-sec="home"><span class="nav-emoji" data-icon="home"></span><span class="nav-label">Home</span></button>
+    <button class="nav-btn" data-sec="lessons"><span class="nav-emoji" data-icon="book-open"></span><span class="nav-label">Lessons</span></button>
+    <button class="nav-btn" data-sec="flashcards"><span class="nav-emoji" data-icon="layers"></span><span class="nav-label">Flashcards</span></button>
+    <button class="nav-btn" data-sec="listening"><span class="nav-emoji" data-icon="headphones"></span><span class="nav-label">Listening</span></button>
+    <button class="nav-btn" data-sec="speaking"><span class="nav-emoji" data-icon="mic"></span><span class="nav-label">Speaking</span></button>
+    <button class="nav-btn" data-sec="verbs"><span class="nav-emoji" data-icon="settings"></span><span class="nav-label">Verb Trainer</span></button>
+    <button class="nav-btn" data-sec="progress"><span class="nav-emoji" data-icon="bar-chart"></span><span class="nav-label">My Progress</span></button>
+    <button class="nav-btn" data-sec="resources"><span class="nav-emoji" data-icon="globe"></span><span class="nav-label">Free Resources</span></button>
+    <button class="nav-btn" id="theme-btn" onclick="toggleTheme()" style="margin-top:14px"><span class="nav-emoji" data-icon="moon"></span><span class="nav-label">Dark mode</span></button>
+    <button class="nav-btn" data-sec="profile" id="profile-btn"><span class="nav-emoji" data-icon="user"></span><span class="nav-label" id="profile-label">Profile</span></button>
   </nav>
 
   <main>
@@ -235,11 +241,11 @@
       </div>
       <div class="card">
         <h2 style="margin-top:0">How to use this site</h2>
-        <p>1️⃣ Work through the <b>Lessons</b> in order — each one has vocabulary (with audio), a grammar explanation, examples, and a quiz.</p>
-        <p>2️⃣ Review words daily with <b>Flashcards</b> — a spaced-repetition system remembers what you find hard.</p>
-        <p>3️⃣ Train your ears in <b>Listening</b> and your pronunciation in <b>Speaking</b> (works best in Chrome/Edge).</p>
-        <p>4️⃣ When you finish, dive into the <b>Free Resources</b> library to keep going — everything there is 100% free.</p>
-        <p style="margin-top:10px; color:var(--muted); font-size:.88rem">💾 Your progress is saved automatically in this browser.</p>
+        <p><span class="step-num">1</span> Work through the <b>Lessons</b> in order — each one has vocabulary (with audio), a grammar explanation, examples, and a quiz.</p>
+        <p><span class="step-num">2</span> Review words daily with <b>Flashcards</b> — a spaced-repetition system remembers what you find hard.</p>
+        <p><span class="step-num">3</span> Train your ears in <b>Listening</b> and your pronunciation in <b>Speaking</b> (works best in Chrome/Edge).</p>
+        <p><span class="step-num">4</span> When you finish, dive into the <b>Free Resources</b> library to keep going — everything there is 100% free.</p>
+        <p style="margin-top:10px; color:var(--muted); font-size:.88rem"><span data-icon="save"></span> Your progress is saved automatically in this browser.</p>
       </div>
       <div class="card" id="continue-card"></div>
     </section>
@@ -253,43 +259,43 @@
     <section id="lesson-view" class="section"></section>
 
     <section id="flashcards" class="section">
-      <h1>Flashcards 🃏</h1>
+      <h1>Flashcards <span data-icon="layers"></span></h1>
       <p class="sub">Spaced repetition: cards you miss come back sooner. Click a card to flip it.</p>
       <div id="fc-area"></div>
     </section>
 
     <section id="listening" class="section">
-      <h1>Listening practice 🎧</h1>
+      <h1>Listening practice <span data-icon="headphones"></span></h1>
       <p class="sub">Listen to the Spanish sentence, then pick the correct meaning. Uses your browser's free Spanish voice.</p>
       <div id="listen-area"></div>
     </section>
 
     <section id="speaking" class="section">
-      <h1>Speaking practice 🎤</h1>
+      <h1>Speaking practice <span data-icon="mic"></span></h1>
       <p class="sub">Read the phrase aloud — your browser's free speech recognition checks your pronunciation. Best in Chrome.</p>
       <div id="speak-area"></div>
     </section>
 
     <section id="verbs" class="section">
-      <h1>Verb conjugation trainer ⚙️</h1>
+      <h1>Verb conjugation trainer <span data-icon="settings"></span></h1>
       <p class="sub">Fast drills to make conjugations automatic — the single biggest speed boost for beginners.</p>
       <div id="verb-area"></div>
     </section>
 
     <section id="progress" class="section">
-      <h1>My progress 📊</h1>
+      <h1>My progress <span data-icon="bar-chart"></span></h1>
       <p class="sub">Everything you've learned so far — and ways to take it with you.</p>
       <div id="progress-area"></div>
     </section>
 
     <section id="resources" class="section">
-      <h1>Free resources library 🌍</h1>
+      <h1>Free resources library <span data-icon="globe"></span></h1>
       <p class="sub">Hand-picked, genuinely free tools to continue past this course. All in English → Spanish, perfect for double practice.</p>
       <div class="grid" id="res-grid"></div>
     </section>
 
     <section id="profile" class="section">
-      <h1>My Profile 👤</h1>
+      <h1>My Profile <span data-icon="user"></span></h1>
       <p class="sub">Your avatar, name, email, voice, streak and badges — all in one place.</p>
 
       <div class="card">
@@ -299,37 +305,37 @@
         <input class="type-in" id="profile-name-in" maxlength="20" style="width:min(320px,100%); margin:6px 0 14px"><br>
         <label style="font-size:.88rem; font-weight:600">Email</label><br>
         <input class="type-in" id="profile-email-in" type="email" placeholder="you@example.com" maxlength="60" style="width:min(320px,100%); margin:6px 0 14px"><br>
-        <button class="btn" onclick="saveProfileDetails()">💾 Save changes</button>
+        <button class="btn" onclick="saveProfileDetails()"><span data-icon="save"></span> Save changes</button>
         <span class="feedback ok" id="profile-save-fb" style="display:inline-block; margin-left:8px"></span>
       </div>
 
       <div class="card">
-        <h2 style="margin-top:0">🔥 Streak</h2>
+        <h2 style="margin-top:0"><span data-icon="flame"></span> Streak</h2>
         <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px">Come back every day to keep your streak alive.</p>
         <div class="stat-row" id="streak-stats"></div>
       </div>
 
       <div class="card">
-        <h2 style="margin-top:0">🏅 Badges</h2>
+        <h2 style="margin-top:0"><span data-icon="award"></span> Badges</h2>
         <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px">Earn these by completing lessons, mastering words, and practicing daily.</p>
         <div class="grid" id="badge-grid"></div>
       </div>
 
       <div class="card">
-        <h2 style="margin-top:0">🔊 Voice settings</h2>
+        <h2 style="margin-top:0"><span data-icon="volume-2"></span> Voice settings</h2>
         <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px">Voice quality depends on your device. Pick the one that sounds most natural (⭐ = high quality). In Chrome, "Google español" is usually best; in Edge, the "Natural" voices.</p>
         <label style="font-size:.88rem; font-weight:600">Spanish voice</label><br>
         <select id="voice-sel" class="type-in" style="width:min(420px,100%); margin:6px 0 14px" onchange="setVoice(this.value)"></select><br>
         <label style="font-size:.88rem; font-weight:600">Speed: <span id="rate-val">0.85×</span></label><br>
         <input type="range" min="0.5" max="1.2" step="0.05" value="0.85" id="rate-slider"
           style="width:min(420px,100%); margin:6px 0 14px" oninput="setRate(this.value)"><br>
-        <button class="btn ghost" onclick="speak('Hola, estoy aprendiendo español. ¡Es muy divertido!')">▶️ Test the voice</button>
+        <button class="btn ghost" onclick="speak('Hola, estoy aprendiendo español. ¡Es muy divertido!')"><span data-icon="play"></span> Test the voice</button>
       </div>
 
       <div class="card">
         <h2 style="margin-top:0">Account</h2>
         <p style="color:var(--muted); font-size:.88rem; margin-bottom:10px" id="account-email-display"></p>
-        <button class="btn ghost" onclick="logout()">🚪 Log out</button>
+        <button class="btn ghost" onclick="logout()"><span data-icon="log-out"></span> Log out</button>
       </div>
     </section>
   </main>
@@ -860,9 +866,9 @@ function renderAvatarPicker(){
     <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:12px">
       ${AVATARS.map(a => `<button class="profile-avatar" style="cursor:pointer; padding:0; border:2px solid ${(!me.photo && a === me.avatar) ? "var(--accent)" : "transparent"}" onclick="setAvatar('${a}')">${a}</button>`).join("")}
     </div>
-    <label class="btn ghost" style="cursor:pointer; display:inline-block">📷 Upload photo
+    <label class="btn ghost" style="cursor:pointer; display:inline-block">${icon("camera")} Upload photo
       <input type="file" accept="image/*" style="display:none" onchange="uploadPhoto(this)"></label>
-    ${me.photo ? `<button class="btn ghost" style="margin-left:8px" onclick="removePhoto()">✕ Remove photo</button>` : ""}`;
+    ${me.photo ? `<button class="btn ghost" style="margin-left:8px" onclick="removePhoto()">${icon("x")} Remove photo</button>` : ""}`;
 }
 async function saveProfileField(fields){
   Object.assign(myProfile, fields);
@@ -929,20 +935,20 @@ function updateStreak(){
 function renderStreakStats(){
   const s = getStreak();
   document.getElementById("streak-stats").innerHTML = `
-    <div class="stat"><div class="num">🔥 ${s.current}</div><div class="lbl">Current streak (days)</div></div>
+    <div class="stat"><div class="num">${icon("flame")} ${s.current}</div><div class="lbl">Current streak (days)</div></div>
     <div class="stat"><div class="num">${s.best}</div><div class="lbl">Longest streak</div></div>
     <div class="stat"><div class="num">${s.totalDays}</div><div class="lbl">Total days practiced</div></div>`;
 }
 const BADGES = [
-  { icon:"🥇", name:"First Step", desc:"Complete your first lesson", test:s => s.doneCount >= 1 },
-  { icon:"📚", name:"Halfway There", desc:"Complete 5 lessons", test:s => s.doneCount >= 5 },
-  { icon:"🎓", name:"A1 Graduate", desc:"Complete all "+LESSONS.length+" lessons", test:s => s.doneCount >= LESSONS.length },
-  { icon:"🃏", name:"Word Collector", desc:"Master 25 words", test:s => s.mastered >= 25 },
-  { icon:"🏆", name:"Vocabulary Master", desc:"Master 75 words", test:s => s.mastered >= 75 },
-  { icon:"💯", name:"Perfectionist", desc:"Score 100% on a quiz", test:s => s.perfectQuizzes >= 1 },
-  { icon:"🔥", name:"On Fire", desc:"3-day streak", test:s => s.streak.current >= 3 },
-  { icon:"⚡", name:"Unstoppable", desc:"7-day streak", test:s => s.streak.current >= 7 },
-  { icon:"👑", name:"Dedicated Learner", desc:"30-day streak", test:s => s.streak.best >= 30 }
+  { icon:"award", name:"First Step", desc:"Complete your first lesson", test:s => s.doneCount >= 1 },
+  { icon:"book-open", name:"Halfway There", desc:"Complete 5 lessons", test:s => s.doneCount >= 5 },
+  { icon:"check-circle", name:"A1 Graduate", desc:"Complete all "+LESSONS.length+" lessons", test:s => s.doneCount >= LESSONS.length },
+  { icon:"layers", name:"Word Collector", desc:"Master 25 words", test:s => s.mastered >= 25 },
+  { icon:"award", name:"Vocabulary Master", desc:"Master 75 words", test:s => s.mastered >= 75 },
+  { icon:"percent", name:"Perfectionist", desc:"Score 100% on a quiz", test:s => s.perfectQuizzes >= 1 },
+  { icon:"flame", name:"On Fire", desc:"3-day streak", test:s => s.streak.current >= 3 },
+  { icon:"zap", name:"Unstoppable", desc:"7-day streak", test:s => s.streak.current >= 7 },
+  { icon:"star", name:"Dedicated Learner", desc:"30-day streak", test:s => s.streak.best >= 30 }
 ];
 function renderBadges(){
   const doneCount = Object.keys(done).length;
@@ -953,7 +959,7 @@ function renderBadges(){
   document.getElementById("badge-grid").innerHTML = BADGES.map(b => {
     const earned = b.test(s);
     return `<div class="card" style="text-align:center; padding:16px; opacity:${earned ? 1 : .35}">
-      <div style="font-size:2rem">${b.icon}</div>
+      <div style="font-size:2rem">${icon(b.icon)}</div>
       <div style="font-weight:700; margin-top:6px">${b.name}</div>
       <div style="font-size:.8rem; color:var(--muted)">${b.desc}</div>
     </div>`;
@@ -972,6 +978,53 @@ function renderProfile(){
 }
 
 let done = {}, fc = {}, scores = {};
+
+/* ================= ICONS ================= */
+const ICONS = {
+  home: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+  "book-open": '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+  layers: '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+  headphones: '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
+  mic: '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+  "bar-chart": '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+  sun: '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>',
+  user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  "volume-2": '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>',
+  play: '<polygon points="5 3 19 12 5 21 5 3"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  "edit-3": '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  "edit-2": '<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>',
+  "message-circle": '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+  "help-circle": '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  award: '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
+  camera: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+  "log-out": '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+  x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  "check-circle": '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+  upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  "refresh-ccw": '<polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  "map-pin": '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+  "external-link": '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>',
+  zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  percent: '<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>'
+};
+function icon(name, cls){
+  return `<svg class="icon${cls ? " " + cls : ""}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ""}</svg>`;
+}
+function applyIcons(){
+  document.querySelectorAll("[data-icon]").forEach(el => el.innerHTML = icon(el.dataset.icon));
+}
+applyIcons();
 
 /* ================= HELPERS ================= */
 const $ = s => document.querySelector(s);
@@ -1050,8 +1103,8 @@ function toggleTheme(){
   store.set("theme", dark ? "dark" : "light");
   const btn = document.getElementById("theme-btn");
   btn.innerHTML = dark
-    ? `<span class="nav-emoji">☀️</span><span class="nav-label">Light mode</span>`
-    : `<span class="nav-emoji">🌙</span><span class="nav-label">Dark mode</span>`;
+    ? `<span class="nav-emoji">${icon("sun")}</span><span class="nav-label">Light mode</span>`
+    : `<span class="nav-emoji">${icon("moon")}</span><span class="nav-label">Dark mode</span>`;
 }
 function show(sec){
   document.querySelectorAll(".section").forEach(s => s.classList.remove("visible"));
@@ -1088,7 +1141,7 @@ function renderHome(){
     || LESSONS.find(l => !done[l.id]);
   const resuming = next && lastId === next.id && !done[next.id];
   $("#continue-card").innerHTML = next
-    ? `<h2 style="margin-top:0">${resuming ? "Pick up where you left off 📍" : "Continue learning ➡️"}</h2>
+    ? `<h2 style="margin-top:0">${resuming ? icon("map-pin") + " Pick up where you left off" : "Continue learning →"}</h2>
        <p>${resuming ? "You were on" : "Next up"}: <b>Lesson ${next.id} — ${next.title}</b></p>
        <p style="color:var(--muted); font-size:.88rem; margin-bottom:12px">${next.subtitle}</p>
        <button class="btn" onclick="openLesson(${next.id})">${resuming ? "Resume" : "Start"} Lesson ${next.id}</button>`
@@ -1114,25 +1167,25 @@ function openLesson(id){
     <h1>Lesson ${l.id}: ${l.title}</h1>
     <p class="sub">${l.subtitle}</p>
 
-    <div class="card"><h2 style="margin-top:0">📖 Vocabulary <span style="font-size:.8rem; color:var(--muted); font-weight:400">(click 🔊 to hear it)</span></h2>
+    <div class="card"><h2 style="margin-top:0">${icon("book")} Vocabulary <span style="font-size:.8rem; color:var(--muted); font-weight:400">(click ${icon("volume-2")} to hear it)</span></h2>
       <table class="vocab">${l.vocab.map(w => `
         <tr><td>${w[0]}</td><td>${w[1]}</td>
-        <td style="text-align:right"><button class="speak-btn" onclick="speak('${esc(w[0]).replace(/'/g,"\\'")}')">🔊</button></td></tr>`).join("")}
+        <td style="text-align:right"><button class="speak-btn" onclick="speak('${esc(w[0]).replace(/'/g,"\\'")}')">${icon("volume-2")}</button></td></tr>`).join("")}
       </table></div>
 
-    <div class="card grammar"><h2 style="margin-top:0">✏️ Grammar</h2>${l.grammar}</div>
+    <div class="card grammar"><h2 style="margin-top:0">${icon("edit-3")} Grammar</h2>${l.grammar}</div>
 
-    <div class="card"><h2 style="margin-top:0">💬 Example sentences <span style="font-size:.8rem; color:var(--muted); font-weight:400">(hover any underlined word to see its meaning)</span></h2>
+    <div class="card"><h2 style="margin-top:0">${icon("message-circle")} Example sentences <span style="font-size:.8rem; color:var(--muted); font-weight:400">(hover any underlined word to see its meaning)</span></h2>
       ${l.examples.map(e => `
         <div class="example">
-          <button class="speak-btn" onclick="speak('${esc(e[0]).replace(/'/g,"\\'")}')">🔊</button>
+          <button class="speak-btn" onclick="speak('${esc(e[0]).replace(/'/g,"\\'")}')">${icon("volume-2")}</button>
           <div><div class="es">${tipify(e[0])}</div><div class="en">${e[1]}</div></div>
         </div>`).join("")}</div>
 
-    <div class="card"><h2 style="margin-top:0">🧩 Quiz</h2><div id="quiz-box"></div>
+    <div class="card"><h2 style="margin-top:0">${icon("help-circle")} Quiz</h2><div id="quiz-box"></div>
       <div id="quiz-result" style="margin-top:10px; font-weight:700"></div>
       <button class="btn" id="finish-btn" style="margin-top:10px; display:none"
-        onclick="completeLesson(${l.id})">✓ Mark lesson as complete</button></div>`;
+        onclick="completeLesson(${l.id})">${icon("check")} Mark lesson as complete</button></div>`;
   renderQuiz(l);
   document.querySelectorAll(".section").forEach(s => s.classList.remove("visible"));
   v.classList.add("visible");
@@ -1215,7 +1268,7 @@ function allCards(){
 let fcQueue = [], fcCur = null, fcFlipped = false;
 function fcDirTabs(){
   const dir = store.get("fcdir", "es");
-  const tabs = [["es","🇪🇸 ES → EN"],["en","🇬🇧 EN → ES"],["mix","🔀 Mixed"]];
+  const tabs = [["es","🇪🇸 ES → EN"],["en","🇬🇧 EN → ES"],["mix",icon("refresh-ccw")+" Mixed"]];
   return `<div class="mode-tabs">${tabs.map(t =>
     `<button class="mode-tab ${dir === t[0] ? "active" : ""}" onclick="setFcDir('${t[0]}')">${t[1]}</button>`).join("")}</div>`;
 }
@@ -1247,10 +1300,10 @@ function nextCard(){
     <div class="fc-meta">${fcQueue.length} card${fcQueue.length>1?"s":""} left · Lesson ${fcCur.lesson}</div>
     <div class="fc-card" id="fc-card" onclick="flipCard()">
       <div id="fc-face">${frontText}</div>
-      <div class="hint" id="fc-hint">${fcCur.front === "en" ? "think of the Spanish, then " : ""}click to reveal · 🔊 below to listen</div>
+      <div class="hint" id="fc-hint">${fcCur.front === "en" ? "think of the Spanish, then " : ""}click to reveal · ${icon("volume-2")} below to listen</div>
     </div>
     <div class="fc-actions">
-      <button class="btn ghost" onclick="speak('${esc(fcCur.es).replace(/'/g,"\\'")}')">🔊 Listen</button>
+      <button class="btn ghost" onclick="speak('${esc(fcCur.es).replace(/'/g,"\\'")}')">${icon("volume-2")} Listen</button>
       <button class="btn" style="background:var(--accent)" onclick="answerFC(false)">✗ Again</button>
       <button class="btn" style="background:var(--green)" onclick="answerFC(true)">✓ Got it</button>
     </div></div>`;
@@ -1260,9 +1313,9 @@ function flipCard(){
   const front = fcCur.front === "es" ? fcCur.es : fcCur.en;
   const back = fcCur.front === "es" ? fcCur.en : fcCur.es;
   $("#fc-face").textContent = fcFlipped ? back : front;
-  $("#fc-hint").textContent = fcFlipped
+  $("#fc-hint").innerHTML = fcFlipped
     ? (fcCur.front === "en" ? "the Spanish — did you get it?" : "English meaning")
-    : "click to reveal · 🔊 below to listen";
+    : `click to reveal · ${icon("volume-2")} below to listen`;
   if (fcFlipped && fcCur.front === "en") speak(fcCur.es);
 }
 function answerFC(ok){
@@ -1290,8 +1343,8 @@ function allExamples(){
 function listenTabs(){
   const m = store.get("lmode", "mc");
   return `<div class="mode-tabs" style="justify-content:center">
-    <button class="mode-tab ${m === "mc" ? "active" : ""}" onclick="setLMode('mc')">🎯 Multiple choice</button>
-    <button class="mode-tab ${m === "dict" ? "active" : ""}" onclick="setLMode('dict')">✍️ Dictation</button>
+    <button class="mode-tab ${m === "mc" ? "active" : ""}" onclick="setLMode('mc')">${icon("target")} Multiple choice</button>
+    <button class="mode-tab ${m === "dict" ? "active" : ""}" onclick="setLMode('dict')">${icon("edit-2")} Dictation</button>
   </div>`;
 }
 function setLMode(m){ store.set("lmode", m); newListen(); }
@@ -1306,8 +1359,8 @@ function newListen(){
     ${listenTabs()}
     <p style="color:var(--muted)">Press play, listen carefully, then choose the meaning.</p>
     <div style="margin:16px 0">
-      <button class="btn" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.85)">▶️ Play</button>
-      <button class="btn ghost" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.6)">🐢 Slow</button>
+      <button class="btn" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.85)">${icon("play")} Play</button>
+      <button class="btn ghost" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.6)">${icon("clock")} Slow</button>
     </div>
     <div style="max-width:520px; margin:0 auto; text-align:left">
       ${opts.map(o => `<button class="opt" onclick="checkListen(this,'${esc(o.en).replace(/'/g,"\\'")}')">${o.en}</button>`).join("")}
@@ -1334,8 +1387,8 @@ function newDictation(){
     ${listenTabs()}
     <p style="color:var(--muted)">Listen, then type exactly what you hear. Accents are forgiven 😉</p>
     <div style="margin:16px 0">
-      <button class="btn" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.8)">▶️ Play</button>
-      <button class="btn ghost" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.55)">🐢 Slow</button>
+      <button class="btn" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.8)">${icon("play")} Play</button>
+      <button class="btn ghost" onclick="speak('${esc(listenCur.es).replace(/'/g,"\\'")}',0.55)">${icon("clock")} Slow</button>
     </div>
     <input class="type-in" id="dict-in" style="width:min(480px,100%)" autocomplete="off"
       placeholder="Type the sentence here..." onkeydown="if(event.key==='Enter')checkDictation()">
@@ -1383,7 +1436,7 @@ function newVerb(){
   const pi = Math.floor(Math.random() * 6);
   verbCur = { name, pi, answer: VERBS[name][pi] };
   $("#verb-area").innerHTML = `<div class="card center">
-    <div class="streak">🔥 Streak: ${verbStreak}</div>
+    <div class="streak">${icon("flame")} Streak: ${verbStreak}</div>
     <p style="color:var(--muted); margin-top:10px">Conjugate:</p>
     <div class="big-es">${verbCur.name.split(" (")[0]} <span style="color:var(--muted); font-size:1rem; font-weight:400">(${verbCur.name.split("(")[1]}</span></div>
     <div style="font-size:1.2rem; margin-bottom:14px"><b>${PRONOUNS[pi]}</b> ______</div>
@@ -1391,7 +1444,7 @@ function newVerb(){
       onkeydown="if(event.key==='Enter')checkVerb()">
     <div style="margin-top:12px">
       <button class="btn" onclick="checkVerb()">Check</button>
-      <button class="btn ghost" onclick="showVerbTable()">📖 Show table</button>
+      <button class="btn ghost" onclick="showVerbTable()">${icon("book")} Show table</button>
     </div>
     <div class="feedback" id="verb-fb" style="font-size:1rem; margin-top:12px"></div>
     <div id="verb-table" style="margin-top:10px"></div>
@@ -1434,10 +1487,10 @@ function newSpeak(){
     <p style="color:var(--muted)">Say this out loud:</p>
     <div class="big-es">${speakCur.es}</div>
     <p style="color:var(--muted); font-size:.9rem; margin-bottom:16px">"${speakCur.en}" ·
-      <button class="speak-btn" onclick="speak('${esc(speakCur.es).replace(/'/g,"\\'")}')">🔊 hear it first</button></p>
-    ${SR ? `<button class="mic-btn" id="mic" onclick="startRecog()">🎤</button>
+      <button class="speak-btn" onclick="speak('${esc(speakCur.es).replace(/'/g,"\\'")}')">${icon("volume-2")} hear it first</button></p>
+    ${SR ? `<button class="mic-btn" id="mic" onclick="startRecog()">${icon("mic")}</button>
             <p style="color:var(--muted); font-size:.82rem; margin-top:8px">tap and speak</p>`
-         : `<p style="color:var(--accent)">⚠️ Speech recognition isn't supported in this browser. Use Chrome or Edge, or simply repeat after the 🔊 audio.</p>`}
+         : `<p style="color:var(--accent)">Speech recognition isn't supported in this browser. Use Chrome or Edge, or simply repeat after the ${icon("volume-2")} audio.</p>`}
     <div class="feedback" id="speak-fb" style="font-size:1rem; margin-top:12px"></div>
     <button class="btn ghost" style="margin-top:14px" onclick="newSpeak()">Next phrase →</button></div>`;
 }
@@ -1455,7 +1508,7 @@ function startRecog(){
     const score = similarity(norm(heard), norm(speakCur.es));
     if (score >= 0.8){ fb.innerHTML = `✓ ¡Excelente! I heard: "<b>${heard}</b>"`; fb.className = "feedback ok"; }
     else if (score >= 0.5){ fb.innerHTML = `Almost! I heard: "<b>${heard}</b>" — try again, a bit slower.`; fb.className = "feedback no"; }
-    else { fb.innerHTML = `I heard: "<b>${heard}</b>" — listen with 🔊 and try again.`; fb.className = "feedback no"; }
+    else { fb.innerHTML = `I heard: "<b>${heard}</b>" — listen with ${icon("volume-2")} and try again.`; fb.className = "feedback no"; }
   };
   recog.onerror = e => { fb.textContent = e.error === "not-allowed" ? "Microphone permission needed — allow it in your browser." : "Didn't catch that — try again."; fb.className = "feedback no"; };
   recog.onend = () => mic.classList.remove("listening");
@@ -1507,7 +1560,7 @@ function renderProgress(){
           const s = scores[l.id];
           return `<tr>
             <td style="font-weight:400">${l.id}. ${l.title}</td>
-            <td>${done[l.id] ? "✅ Completed" : store.get("last",null) === l.id ? "📍 In progress" : "—"}</td>
+            <td>${done[l.id] ? icon("check-circle") + " Completed" : store.get("last",null) === l.id ? icon("map-pin") + " In progress" : "—"}</td>
             <td>${s ? s.right + "/" + s.total + " <span style='color:var(--muted); font-size:.8rem'>(" + s.date + ")</span>" : "—"}</td>
           </tr>`;
         }).join("")}
@@ -1516,20 +1569,20 @@ function renderProgress(){
     </div>
 
     ${g.hard.length ? `<div class="card">
-      <h2 style="margin-top:0">🔁 Words that need practice</h2>
+      <h2 style="margin-top:0">${icon("refresh-ccw")} Words that need practice</h2>
       <p style="color:var(--muted); font-size:.86rem; margin-bottom:8px">You marked these "Again" recently — they'll show up first in Flashcards.</p>
       <table class="vocab">${g.hard.map(c => `<tr><td>${c.es}</td><td>${c.en}</td>
-        <td style="text-align:right"><button class="speak-btn" onclick="speak('${esc(c.es).replace(/'/g,"\\'")}')">🔊</button></td></tr>`).join("")}</table>
+        <td style="text-align:right"><button class="speak-btn" onclick="speak('${esc(c.es).replace(/'/g,"\\'")}')">${icon("volume-2")}</button></td></tr>`).join("")}</table>
     </div>` : ""}
 
     <div class="card">
-      <h2 style="margin-top:0">📤 Take your learning anywhere</h2>
+      <h2 style="margin-top:0">${icon("upload")} Take your learning anywhere</h2>
       <p style="color:var(--muted); font-size:.88rem; margin-bottom:12px">Export your words to study in other free apps, or back up your progress to move it to another browser or computer.</p>
       <div style="display:flex; gap:10px; flex-wrap:wrap">
-        <button class="btn ghost" onclick="exportAnki()">🃏 Word list for Anki (.csv)</button>
-        <button class="btn ghost" onclick="exportWordList()">📄 Printable word list (.txt)</button>
-        <button class="btn ghost" onclick="exportBackup()">💾 Back up my progress (.json)</button>
-        <label class="btn ghost" style="cursor:pointer">📥 Restore a backup
+        <button class="btn ghost" onclick="exportAnki()">${icon("layers")} Word list for Anki (.csv)</button>
+        <button class="btn ghost" onclick="exportWordList()">${icon("book")} Printable word list (.txt)</button>
+        <button class="btn ghost" onclick="exportBackup()">${icon("save")} Back up my progress (.json)</button>
+        <label class="btn ghost" style="cursor:pointer">${icon("download")} Restore a backup
           <input type="file" accept=".json" style="display:none" onchange="importBackup(this)"></label>
       </div>
       <p style="color:var(--muted); font-size:.8rem; margin-top:10px">Anki tip: File → Import, choose the .csv — front is Spanish, back is English. Anki is free: apps.ankiweb.net</p>
@@ -1602,11 +1655,19 @@ async function boot(){
   }
   const uid = session.user.id;
 
-  let { data: profileRow } = await sb.from("profiles").select("*").eq("id", uid).maybeSingle();
-  if (!profileRow){
+  let { data: profileRow, error: profileErr } = await sb.from("profiles").select("*").eq("id", uid).maybeSingle();
+  if (!profileErr && !profileRow){
     const name = (session.user.user_metadata && session.user.user_metadata.name) || session.user.email.split("@")[0];
     const ins = await sb.from("profiles").insert({ id: uid, email: session.user.email, name, avatar: AVATARS[0] }).select().single();
     profileRow = ins.data;
+    profileErr = ins.error;
+  }
+  if (profileErr || !profileRow){
+    // stale/orphaned session (e.g. the account was deleted server-side) — reset and show login
+    await sb.auth.signOut();
+    hideLoading();
+    showAuthOverlay();
+    return;
   }
   myProfile = profileRow;
 
@@ -1627,7 +1688,7 @@ async function boot(){
   if (store.get("theme", "light") === "dark"){
     document.body.classList.add("dark");
     document.getElementById("theme-btn").innerHTML =
-      `<span class="nav-emoji">☀️</span><span class="nav-label">Light mode</span>`;
+      `<span class="nav-emoji">${icon("sun")}</span><span class="nav-label">Light mode</span>`;
   }
   const savedRate = store.get("rate", 0.85);
   document.getElementById("rate-slider").value = savedRate;
