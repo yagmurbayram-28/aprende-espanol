@@ -199,8 +199,8 @@
   <div class="profile-box">
     <div style="font-size:2.4rem">🇪🇸</div>
     <h1>¡Aprende <span style="color:var(--accent)">Español</span>!</h1>
-    <p style="color:var(--muted)">Hesabınızla kayıt olun veya giriş yapın — ilerlemeniz güvenle saklansın.</p>
-    <div class="mode-tabs" style="justify-content:center; margin-top:14px">
+    <p style="color:var(--muted)" id="auth-sub">Hesabınızla kayıt olun veya giriş yapın — ilerlemeniz güvenle saklansın.</p>
+    <div class="mode-tabs" id="auth-tabs" style="justify-content:center; margin-top:14px">
       <button class="mode-tab active" id="auth-tab-signup" onclick="setAuthMode('signup')">Kayıt Ol</button>
       <button class="mode-tab" id="auth-tab-login" onclick="setAuthMode('login')">Giriş Yap</button>
     </div>
@@ -208,11 +208,13 @@
     <input class="type-in" id="auth-email" type="email" placeholder="E-posta..." maxlength="60" style="width:100%; margin-top:8px">
     <input class="type-in" id="auth-password" type="password" placeholder="Şifre (en az 6 karakter)..." maxlength="72"
       style="width:100%; margin-top:8px" onkeydown="if(event.key==='Enter')submitAuth()">
+    <input class="type-in hidden" id="auth-newpass" type="password" placeholder="Yeni şifre (en az 6 karakter)..." maxlength="72"
+      style="width:100%; margin-top:12px" onkeydown="if(event.key==='Enter')submitAuth()">
     <div class="feedback" id="auth-fb" style="margin-top:8px; min-height:1.2em"></div>
     <div style="margin-top:12px">
       <button class="btn" id="auth-submit-btn" onclick="submitAuth()">Kayıt Ol</button>
     </div>
-    <p style="margin-top:10px"><a href="javascript:void(0)" onclick="forgotPassword()" style="font-size:.85rem">Şifremi unuttum</a></p>
+    <p style="margin-top:10px"><a href="javascript:void(0)" id="auth-forgot" onclick="forgotPassword()" style="font-size:.85rem">Şifremi unuttum</a></p>
   </div>
 </div>
 <div class="app">
@@ -778,7 +780,13 @@ function tipify(sentence){
 /* ================= SUPABASE ================= */
 const SUPABASE_URL = "https://ohplvrttjserreicemyb.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ocGx2cnR0anNlcnJlaWNlbXliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3OTAzMDcsImV4cCI6MjA5OTM2NjMwN30.SNmdt2JywVnx_7iO5qrZ945Mkd_3H7Zl6ATJkIhx3qk";
+// Read what the e-mail link carried *before* supabase-js consumes and clears the URL hash.
+let recoveryPending = /[#&]type=recovery/.test(location.hash);
+const LINK_ERROR = /[#&]error(_code|_description)?=/.test(location.hash);
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+sb.auth.onAuthStateChange(ev => {
+  if (ev === "PASSWORD_RECOVERY"){ recoveryPending = true; hideLoading(); setAuthMode("recovery"); showAuthOverlay(); }
+});
 
 /* ================= STORAGE & PROFILE (Supabase-backed) ================= */
 const AVATARS = ["🦊","🐱","🦉","🐧","🐸","🦋","🐢","🐰","🦁","🐨","🐼","🦄"];
@@ -806,13 +814,32 @@ const store = {
 let authMode = "signup";
 function setAuthMode(m){
   authMode = m;
-  document.getElementById("auth-tab-signup").classList.toggle("active", m === "signup");
-  document.getElementById("auth-tab-login").classList.toggle("active", m === "login");
-  document.getElementById("auth-name").classList.toggle("hidden", m === "login");
-  document.getElementById("auth-submit-btn").textContent = m === "signup" ? "Kayıt Ol" : "Giriş Yap";
-  document.getElementById("auth-fb").textContent = "";
+  const rec = m === "recovery", $id = id => document.getElementById(id);
+  $id("auth-tab-signup").classList.toggle("active", m === "signup");
+  $id("auth-tab-login").classList.toggle("active", m === "login");
+  $id("auth-tabs").classList.toggle("hidden", rec);
+  $id("auth-name").classList.toggle("hidden", m !== "signup");
+  $id("auth-email").classList.toggle("hidden", rec);
+  $id("auth-password").classList.toggle("hidden", rec);
+  $id("auth-newpass").classList.toggle("hidden", !rec);
+  $id("auth-forgot").parentElement.classList.toggle("hidden", rec);
+  $id("auth-sub").textContent = rec ? "Yeni şifrenizi belirleyin." : "Hesabınızla kayıt olun veya giriş yapın — ilerlemeniz güvenle saklansın.";
+  $id("auth-submit-btn").textContent = rec ? "Şifreyi güncelle" : m === "signup" ? "Kayıt Ol" : "Giriş Yap";
+  $id("auth-fb").textContent = "";
 }
-function submitAuth(){ authMode === "signup" ? signUp() : signIn(); }
+function submitAuth(){ authMode === "signup" ? signUp() : authMode === "recovery" ? updatePassword() : signIn(); }
+async function updatePassword(){
+  const password = document.getElementById("auth-newpass").value;
+  const fb = document.getElementById("auth-fb");
+  if (!password || password.length < 6){ fb.textContent = "Şifre en az 6 karakter olmalı."; fb.className = "feedback no"; return; }
+  fb.textContent = "Güncelleniyor…"; fb.className = "feedback";
+  const { error } = await sb.auth.updateUser({ password });
+  if (error){ fb.textContent = error.message; fb.className = "feedback no"; return; }
+  recoveryPending = false;
+  history.replaceState(null, "", location.pathname + location.search);
+  document.getElementById("auth-newpass").value = "";
+  await boot();
+}
 async function signUp(){
   const name = document.getElementById("auth-name").value.trim();
   const email = document.getElementById("auth-email").value.trim();
@@ -846,8 +873,9 @@ async function forgotPassword(){
   const email = document.getElementById("auth-email").value.trim();
   const fb = document.getElementById("auth-fb");
   if (!email || !EMAIL_RE.test(email)){ fb.textContent = "Önce e-posta adresinizi yazın."; fb.className = "feedback no"; return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email);
-  fb.textContent = error ? error.message : "✓ Şifre sıfırlama linki e-postanıza gönderildi.";
+  fb.textContent = "Gönderiliyor…"; fb.className = "feedback";
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+  fb.textContent = error ? error.message : "✓ Şifre sıfırlama linki e-postanıza gönderildi (gelen kutusu ve spam klasörüne bakın).";
   fb.className = "feedback " + (error ? "no" : "ok");
 }
 async function logout(){
@@ -1650,6 +1678,20 @@ async function boot(){
   const { data: { session } } = await sb.auth.getSession();
   if (!session){
     hideLoading();
+    showAuthOverlay();
+    if (LINK_ERROR){
+      setAuthMode("login");
+      const fb = document.getElementById("auth-fb");
+      fb.textContent = "E-postadaki link geçersiz veya süresi dolmuş. “Şifremi unuttum” ile yenisini isteyin.";
+      fb.className = "feedback no";
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+    return;
+  }
+  if (recoveryPending){
+    // arrived from a password-reset e-mail: ask for a new password before entering the app
+    hideLoading();
+    setAuthMode("recovery");
     showAuthOverlay();
     return;
   }
