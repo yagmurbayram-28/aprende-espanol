@@ -1749,6 +1749,8 @@ async function boot(){
     progressRow = ins.data;
   }
   progressCache = progressRow || {};
+  // the voice was first picked before the saved settings arrived: pick it again now
+  if ("speechSynthesis" in window) pickVoice();
 
   done = store.get("done", {});
   fc = store.get("fc", {});
